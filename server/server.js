@@ -11,6 +11,8 @@ const inquiriesRouter = require('./route/inquiries');
 const projectsRouter = require('./route/projects');
 const contentRouter = require('./route/content');
 const aboutRouter = require('./route/about');
+const contactRouter = require('./route/contact');
+const skillsRouter = require('./route/skills');
 const Inquiry = require('./module/Inquiry');
 const Project = require('./module/Project');
 
@@ -79,6 +81,8 @@ app.use('/api/inquiries', inquiriesRouter);
 app.use('/api/projects', projectsRouter);
 app.use('/api/content', contentRouter);
 app.use('/api/about', aboutRouter);
+app.use('/api/contact', contactRouter);
+app.use('/api/skills', skillsRouter);
 
 // 404 Route handler
 app.use((req, res) => {

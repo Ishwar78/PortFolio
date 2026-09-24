@@ -98,4 +98,22 @@ export const portfolioApi = {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
+
+  // Dedicated Contact Page Content
+  getContact: () => apiRequest('/contact'),
+
+  saveContact: (data) =>
+    apiRequest('/contact', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  // Dedicated Skills Page Content
+  getSkills: () => apiRequest('/skills'),
+
+  saveSkills: (data) =>
+    apiRequest('/skills', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
 };

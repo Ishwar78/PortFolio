@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FiSend,
   FiMail,
@@ -53,7 +53,7 @@ export default function Contact() {
 
   useEffect(() => {
     portfolioApi
-      .getContent("contact")
+      .getContact()
       .then((res) => {
         if (res && res.data && res.data.email) {
           setContactInfo(res.data);

@@ -45,7 +45,7 @@ export default function AdminContact() {
   // Fetch from MongoDB on mount
   useEffect(() => {
     portfolioApi
-      .getContent('contact')
+      .getContact()
       .then((res) => {
         if (res && res.data && res.data.email) {
           setData(res.data);
@@ -59,7 +59,7 @@ export default function AdminContact() {
     setSaving(true);
     try {
       localStorage.setItem('ishwar_contact_info', JSON.stringify(data));
-      await portfolioApi.saveContent('contact', data);
+      await portfolioApi.saveContact(data);
       setToast('Contact details saved successfully to MongoDB!');
     } catch (err) {
       setToast('Saved to local storage!');
