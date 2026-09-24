@@ -1,0 +1,115 @@
+.about-admin-page {
+  animation: fadeIn 0.3s ease;
+}
+
+.about-admin-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.about-preview-column {
+  position: sticky;
+  top: 90px;
+}
+
+.about-preview-card {
+  background: radial-gradient(circle at 10% 10%, rgba(21, 151, 255, 0.1), transparent 50%), #050e1a;
+  border: 1px solid rgba(21, 151, 255, 0.25);
+  border-radius: 14px;
+  padding: 30px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.about-preview-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.about-avatar-preview {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1597ff, #005ce6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(21, 151, 255, 0.4);
+}
+
+.about-name-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.about-role-sub {
+  font-size: 12px;
+  color: #60b5ff;
+}
+
+.preview-about-head {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 12px;
+}
+
+.preview-about-bio {
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--admin-text-muted);
+  margin: 0 0 24px;
+}
+
+.preview-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.meta-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  font-size: 12px;
+  color: #d1dfed;
+}
+
+.meta-pill .pill-icon {
+  color: var(--admin-accent);
+  font-size: 15px;
+}
+
+.meta-pill.highlight {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+  color: #6ee7b7;
+}
+
+.meta-pill.highlight .pill-icon {
+  color: #10b981;
+}
+
+@media (max-width: 1024px) {
+  .about-admin-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-preview-column {
+    position: static;
+  }
+}

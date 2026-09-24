@@ -1,0 +1,376 @@
+.experience-page {
+    background: var(--bg);
+    color: var(--text);
+    padding-bottom: 1px
+}
+
+.experience-page p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--muted)
+}
+
+.exp-hero {
+    padding: 45px 6%;
+    display: grid;
+    grid-template-columns: .9fr 1.1fr;
+    gap: 25px;
+    align-items: center
+}
+
+.exp-hero small,
+.timeline>small {
+    color: var(--blue);
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    font-weight: 700
+}
+
+.exp-hero h1 {
+    font-size: 45px;
+    line-height: 1.05;
+    margin: 14px 0
+}
+
+.exp-hero h1 span {
+    color: var(--blue)
+}
+
+.exp-hero>div>div {
+    display: flex;
+    gap: 13px;
+    margin-top: 23px
+}
+
+.exp-hero a {
+    padding: 13px 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px
+}
+
+.exp-hero a:first-child {
+    background: var(--blue2);
+    color: #fff;
+    border-color: var(--blue2)
+}
+
+.exp-hero img {
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 10px;
+    border: 1px solid var(--line)
+}
+
+.exp-stats {
+    margin: 0 5%;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: var(--surface)
+}
+
+.exp-stats div {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    border-right: 1px solid var(--line);
+    padding-left: 18px
+}
+
+.exp-stats div:last-child {
+    border: 0
+}
+
+.exp-stats svg {
+    color: var(--blue);
+    font-size: 24px
+}
+
+.exp-stats b {
+    font-size: 17px
+}
+
+.exp-stats small {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 400;
+    margin-top: 4px
+}
+
+.timeline {
+    padding: 55px 5% 20px
+}
+
+.timeline h2 {
+    font-size: 28px;
+    margin: 10px 0 30px
+}
+
+.timeline>div {
+    position: relative
+}
+
+.timeline>div:before {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--line)
+}
+
+.timeline article {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 25px;
+    margin-bottom: 15px;
+    position: relative
+}
+
+.timeline time {
+    font-size: 12px;
+    color: var(--blue);
+    font-weight: 700;
+    padding-top: 20px
+}
+
+.timeline-card {
+    position: relative;
+    padding: 20px 18px 20px 75px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--surface);
+    display: flex;
+    justify-content: space-between;
+    gap: 15px
+}
+
+.company-icon {
+    position: absolute;
+    left: 14px;
+    top: 18px;
+    width: 48px;
+    height: 48px;
+    border-radius: 9px;
+    background: var(--surface2);
+    display: grid;
+    place-items: center;
+    color: var(--blue);
+    font-size: 22px
+}
+
+.timeline-card h3 {
+    font-size: 14px;
+    margin: 0 0 6px
+}
+
+.timeline-card b {
+    font-size: 11px;
+    color: var(--blue)
+}
+
+.timeline-card p {
+    font-size: 12px;
+    margin-bottom: 0
+}
+
+.timeline-card>span {
+    background: rgba(21, 151, 255, .12);
+    color: var(--blue);
+    padding: 7px 10px;
+    border-radius: 20px;
+    font-size: 9px;
+    height: max-content;
+    white-space: nowrap
+}
+
+.tools {
+    padding: 20px 5% 25px
+}
+
+.tools h2 {
+    font-size: 20px
+}
+
+.tools>div {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 10px
+}
+
+.tools span {
+    height: 72px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    font-size: 10px;
+    gap: 4px
+}
+
+.tools svg {
+    color: var(--blue);
+    font-size: 22px
+}
+
+@media(max-width:900px) {
+    .exp-hero {
+        grid-template-columns: 1fr
+    }
+
+    .exp-stats {
+        grid-template-columns: 1fr 1fr
+    }
+
+    .tools>div {
+        grid-template-columns: repeat(6, 1fr)
+    }
+}
+
+@media(max-width:600px) {
+    .exp-hero h1 {
+        font-size: 37px
+    }
+
+    .exp-stats {
+        grid-template-columns: 1fr
+    }
+
+    .exp-stats div {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 12px
+    }
+
+    .timeline article {
+        grid-template-columns: 1fr
+    }
+
+    .timeline time {
+        padding-left: 25px
+    }
+
+    .timeline-card {
+        margin-left: 0
+    }
+
+    .tools>div {
+        grid-template-columns: repeat(3, 1fr)
+    }
+}
+
+.experience-page {
+    background: radial-gradient(circle at 78% 10%, rgba(21, 151, 255, .1), transparent 28%), var(--bg);
+    font-family: Montserrat, sans-serif
+}
+
+.exp-hero {
+    min-height: 500px;
+    padding: 65px 4.5%;
+    gap: 55px
+}
+
+.exp-hero h1 {
+    font-size: 56px;
+    letter-spacing: -1.5px
+}
+
+.exp-hero img {
+    height: 420px;
+    border-radius: 18px;
+    box-shadow: 0 30px 75px rgba(0, 0, 0, .28)
+}
+
+.exp-stats,
+.timeline-card,
+.tools {
+    border: 1px solid rgba(45, 77, 102, .65) !important;
+    background: linear-gradient(145deg, rgba(10, 25, 40, .8), rgba(4, 14, 23, .7)) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 20px 55px rgba(0, 0, 0, .16)
+}
+
+.timeline-card {
+    transition: .25s
+}
+
+.timeline-card:hover {
+    transform: translateX(5px);
+    border-color: rgba(21, 151, 255, .65) !important
+}
+
+@media(max-width:800px) {
+    .exp-hero {
+        grid-template-columns: 1fr;
+        padding: 50px 5%
+    }
+
+    .exp-hero h1 {
+        font-size: 43px
+    }
+}
+
+.experience-page {
+    background: radial-gradient(circle at 78% 10%, rgba(21, 151, 255, .1), transparent 28%), var(--bg);
+    font-family: Montserrat, sans-serif
+}
+
+.exp-hero {
+    min-height: 500px;
+    padding: 65px 4.5%;
+    gap: 55px
+}
+
+.exp-hero h1 {
+    font-size: 56px;
+    letter-spacing: -1.5px
+}
+
+.exp-hero img {
+    height: 420px;
+    border-radius: 18px;
+    box-shadow: 0 30px 75px rgba(0, 0, 0, .28)
+}
+
+.exp-stats,
+.timeline-card,
+.tools {
+    border: 1px solid rgba(45, 77, 102, .65) !important;
+    background: linear-gradient(145deg, rgba(10, 25, 40, .8), rgba(4, 14, 23, .7)) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 20px 55px rgba(0, 0, 0, .16)
+}
+
+.timeline-card {
+    transition: .25s
+}
+
+.timeline-card:hover {
+    transform: translateX(5px);
+    border-color: rgba(21, 151, 255, .65) !important
+}
+
+@media(max-width:800px) {
+    .exp-hero {
+        grid-template-columns: 1fr;
+        padding: 50px 5%
+    }
+
+    .exp-hero h1 {
+        font-size: 43px
+    }
+}

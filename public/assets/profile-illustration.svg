@@ -1,0 +1,9 @@
+<svg width="760" height="760" viewBox="0 0 760 760" xmlns="http://www.w3.org/2000/svg">
+<defs><radialGradient id="g"><stop stop-color="#1687ff" stop-opacity=".85"/><stop offset="1" stop-color="#1687ff" stop-opacity="0"/></radialGradient><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#162c49"/><stop offset="1" stop-color="#050a11"/></linearGradient></defs>
+<circle cx="380" cy="330" r="310" fill="url(#g)"/><circle cx="380" cy="360" r="210" fill="#07111f" stroke="#1687ff" stroke-opacity=".35"/>
+<path d="M255 660c18-142 67-220 125-220s107 78 125 220H255Z" fill="url(#b)" stroke="#258dff" stroke-opacity=".35"/>
+<circle cx="380" cy="315" r="105" fill="#d9a77d"/><path d="M277 310c5-105 53-139 108-139 75 0 113 53 102 143-20-37-53-55-98-55-39 0-73 17-112 51Z" fill="#11151c"/>
+<path d="M315 344c18 13 112 13 130 0" fill="none" stroke="#11151c" stroke-width="8" stroke-linecap="round"/><circle cx="340" cy="315" r="6"/><circle cx="420" cy="315" r="6"/>
+<path d="M290 420c34 30 146 30 180 0" fill="#0b1625"/>
+<text x="380" y="705" text-anchor="middle" fill="#7fc1ff" font-family="Arial" font-size="24" letter-spacing="4">FULL STACK DEVELOPER</text>
+</svg>

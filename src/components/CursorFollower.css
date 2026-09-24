@@ -1,0 +1,261 @@
+/* =========================================================
+   ISHWAR PORTFOLIO - CUSTOM CURSOR FOLLOWER
+========================================================= */
+
+.cursor-dot {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #1597ff;
+
+  box-shadow:
+    0 0 10px rgba(21, 151, 255, 0.9),
+    0 0 22px rgba(21, 151, 255, 0.55);
+
+  pointer-events: none;
+
+  z-index: 99999;
+
+  will-change: transform;
+}
+
+
+/* =========================================================
+   MAIN FOLLOWER
+========================================================= */
+
+.cursor-follower {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 76px;
+  height: 76px;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  z-index: 99998;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(21, 151, 255, 0.12) 0%,
+      rgba(21, 151, 255, 0.05) 45%,
+      transparent 72%
+    );
+
+  border: 1px solid rgba(21, 151, 255, 0.45);
+
+  box-shadow:
+    0 0 25px rgba(21, 151, 255, 0.12),
+    inset 0 0 20px rgba(21, 151, 255, 0.05);
+
+  backdrop-filter: blur(3px);
+
+  will-change: transform;
+
+  transition:
+    width 0.25s ease,
+    height 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+.cursor-follower span {
+  position: relative;
+
+  color: #dff2ff;
+
+  font-size: 8px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.8px;
+
+  text-transform: uppercase;
+
+  white-space: nowrap;
+
+  text-shadow:
+    0 0 10px rgba(21, 151, 255, 0.6);
+}
+
+
+/* Small center dot inside circle */
+
+.cursor-follower::before {
+  content: "";
+
+  position: absolute;
+
+  width: 4px;
+  height: 4px;
+
+  border-radius: 50%;
+
+  background: #1597ff;
+
+  box-shadow:
+    0 0 8px rgba(21, 151, 255, 0.9);
+
+  opacity: 0.7;
+}
+
+
+/* =========================================================
+   ROTATING OUTER RING
+========================================================= */
+
+.cursor-follower::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 7px;
+
+  border-radius: 50%;
+
+  border: 1px dashed rgba(21, 151, 255, 0.3);
+
+  animation: cursorRotate 10s linear infinite;
+}
+
+
+/* =========================================================
+   HOVER EFFECT
+========================================================= */
+
+body:has(a:hover) .cursor-follower,
+body:has(button:hover) .cursor-follower {
+  width: 92px;
+  height: 92px;
+
+  border-color: rgba(21, 151, 255, 0.75);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(21, 151, 255, 0.2),
+      rgba(21, 151, 255, 0.05) 60%,
+      transparent 75%
+    );
+
+  box-shadow:
+    0 0 35px rgba(21, 151, 255, 0.22),
+    inset 0 0 25px rgba(21, 151, 255, 0.08);
+}
+
+body:has(a:hover) .cursor-follower span,
+body:has(button:hover) .cursor-follower span {
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   IMAGE / PROJECT HOVER
+========================================================= */
+
+body:has(img:hover) .cursor-follower {
+  width: 88px;
+  height: 88px;
+
+  border-color: rgba(21, 151, 255, 0.7);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(21, 151, 255, 0.18),
+      transparent 70%
+    );
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes cursorRotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   LIGHT THEME
+========================================================= */
+
+:root[data-theme="light"] .cursor-follower {
+  background:
+    radial-gradient(
+      circle,
+      rgba(8, 124, 240, 0.1),
+      transparent 70%
+    );
+
+  border-color: rgba(8, 124, 240, 0.45);
+
+  box-shadow:
+    0 0 25px rgba(8, 124, 240, 0.1);
+}
+
+:root[data-theme="light"] .cursor-follower span {
+  color: #075ea8;
+
+  text-shadow:
+    0 0 8px rgba(8, 124, 240, 0.25);
+}
+
+:root[data-theme="light"] .cursor-dot {
+  background: #087cf0;
+
+  box-shadow:
+    0 0 10px rgba(8, 124, 240, 0.7);
+}
+
+
+/* =========================================================
+   TOUCH DEVICES / MOBILE
+========================================================= */
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot,
+  .cursor-follower {
+    display: none;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-follower::after {
+    animation: none;
+  }
+}
