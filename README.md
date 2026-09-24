@@ -14,6 +14,7 @@ Premium dark/neon-blue personal portfolio built with React + Vite.
 - Responsive premium UI
 - Montserrat typography
 - React Icons
+- chatboat
 
 ## Admin
 - `/admin/login`
@@ -26,9 +27,7 @@ Premium dark/neon-blue personal portfolio built with React + Vite.
 - Contact
 - Inquiries
 
-Admin credentials:
-- Email: `Ishwarweb@admin.com`
-- Password: `AdminIshwar@1234#`
+
 
 ## Run
 ```bash
