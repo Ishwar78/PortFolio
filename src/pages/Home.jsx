@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   FiArrowRight,
@@ -19,9 +19,56 @@ import {
   FiServer,
   FiMonitor,
 } from "react-icons/fi";
+import { portfolioApi } from "../lib/api";
 import CTA from "../components/CTA";
 import "./Home.css";
 import IshwarChatbot from "../components/IshwarChatbot";
+
+const defaultHomeContent = {
+  hero: {
+    eyebrow: 'FULL STACK DEVELOPER',
+    smallTitle: "HELLO, I'M",
+    titleLine1: 'Ishwar',
+    titleLine2: 'Sharma.',
+    roleHeadline: 'I build modern web applications that solve real-world problems.',
+    description:
+      'Full Stack Developer focused on creating scalable, responsive and high-performance digital experiences using React, Java, Spring Boot, Node.js and modern web technologies.',
+    primaryBtnText: 'View My Work',
+    primaryBtnLink: '/projects',
+    secondaryBtnText: "Let's Talk",
+    secondaryBtnLink: '/contact',
+    resumeLink: '/resume.pdf',
+    resumeText: 'Resume',
+    githubUrl: 'https://github.com/',
+    linkedinUrl: 'https://linkedin.com/',
+    twitterUrl: 'https://twitter.com/',
+    email: 'ishwarweb@gmail.com',
+    noteText: 'Always learning. Always building.',
+    image: '/assets/ishwar-profile.jpg',
+    stat1Number: '2+',
+    stat1Label: 'Years Experience',
+    stat2Number: '10+',
+    stat2Label: 'Projects Built',
+    stat3Number: '100%',
+    stat3Label: 'Commitment',
+  },
+  homeAbout: {
+    eyebrow: 'ABOUT ME',
+    headingMain: 'Turning Ideas Into',
+    headingHighlight: 'Real-World Solutions.',
+    description:
+      "I'm a Full Stack Developer with a strong foundation in Java, Spring Boot, React and modern web technologies. I enjoy building complete web applications — from intuitive user interfaces to robust backend systems — while continuously improving my development approach.",
+    location: 'Rohtak, Haryana',
+    education: 'MCA – MDU Rohtak',
+    email: 'ishwarweb@gmail.com',
+    btnText: 'More About Me',
+    btnLink: '/about',
+    image: '/assets/ishwar-profile.jpg',
+    badgeTop: 'DEVELOPER',
+    badgeNumber: '01',
+    captions: 'BUILD, LEARN, GROW',
+  },
+};
 
 
 const skills = [
@@ -67,6 +114,26 @@ const projects = [
 ];
 
 export default function Home() {
+  const [content, setContent] = useState(() => {
+    const cached = localStorage.getItem('ishwar_home_content');
+    return cached ? JSON.parse(cached) : defaultHomeContent;
+  });
+
+  useEffect(() => {
+    portfolioApi
+      .getContent('home')
+      .then((res) => {
+        if (res && res.data && res.data.hero) {
+          setContent(res.data);
+          localStorage.setItem('ishwar_home_content', JSON.stringify(res.data));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const hero = content?.hero || defaultHomeContent.hero;
+  const homeAbout = content?.homeAbout || defaultHomeContent.homeAbout;
+
   return (
     <main className="home-page">
 
@@ -86,17 +153,17 @@ export default function Home() {
 
           <div className="eyebrow hero-eyebrow">
             <span className="eyebrow-dot"></span>
-            FULL STACK DEVELOPER
+            {hero.eyebrow}
           </div>
 
           <div className="hero-title-wrap">
 
-            <span className="hero-small-title">HELLO, I'M</span>
+            <span className="hero-small-title">{hero.smallTitle}</span>
 
             <h1>
-              Ishwar
+              {hero.titleLine1}
               <br />
-              <span>Sharma.</span>
+              <span>{hero.titleLine2}</span>
             </h1>
 
           </div>
@@ -104,39 +171,37 @@ export default function Home() {
           <div className="hero-role">
             <span className="role-line"></span>
             <h2>
-              I build modern web applications
-              <br />
-              that solve <strong>real-world problems.</strong>
+              {hero.roleHeadline}
             </h2>
           </div>
 
           <p className="hero-description">
-            Full Stack Developer focused on creating scalable, responsive
-            and high-performance digital experiences using React, Java,
-            Spring Boot, Node.js and modern web technologies.
+            {hero.description}
           </p>
 
           <div className="hero-actions">
 
-            <Link className="primary hero-btn" to="/projects">
-              <span>View My Work</span>
+            <Link className="primary hero-btn" to={hero.primaryBtnLink || "/projects"}>
+              <span>{hero.primaryBtnText}</span>
               <FiArrowRight />
             </Link>
 
-            <Link className="outline hero-btn" to="/contact">
+            <Link className="outline hero-btn" to={hero.secondaryBtnLink || "/contact"}>
               <FiMail />
-              <span>Let's Talk</span>
+              <span>{hero.secondaryBtnText}</span>
             </Link>
 
-            <a
-              className="resume-link"
-              href="/assets/Ishwar-Resume.pdf"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <FiDownload />
-              Resume
-            </a>
+            {hero.resumeLink && (
+              <a
+                className="resume-link"
+                href={hero.resumeLink}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FiDownload />
+                {hero.resumeText || "Resume"}
+              </a>
+            )}
 
           </div>
 
@@ -144,45 +209,53 @@ export default function Home() {
 
             <div className="socials">
 
-              <a
-                href="https://github.com/"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="GitHub"
-              >
-                <FiGithub />
-              </a>
+              {hero.githubUrl && (
+                <a
+                  href={hero.githubUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="GitHub"
+                >
+                  <FiGithub />
+                </a>
+              )}
 
-              <a
-                href="https://linkedin.com/"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="LinkedIn"
-              >
-                <FiLinkedin />
-              </a>
+              {hero.linkedinUrl && (
+                <a
+                  href={hero.linkedinUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="LinkedIn"
+                >
+                  <FiLinkedin />
+                </a>
+              )}
 
-              <a
-                href="https://twitter.com/"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Twitter"
-              >
-                <FiTwitter />
-              </a>
+              {hero.twitterUrl && (
+                <a
+                  href={hero.twitterUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Twitter"
+                >
+                  <FiTwitter />
+                </a>
+              )}
 
-              <a
-                href="mailto:ishwarweb@gmail.com"
-                aria-label="Email"
-              >
-                <FiMail />
-              </a>
+              {hero.email && (
+                <a
+                  href={`mailto:${hero.email}`}
+                  aria-label="Email"
+                >
+                  <FiMail />
+                </a>
+              )}
 
             </div>
 
             <div className="hero-note">
               <span></span>
-              Always learning. Always building.
+              {hero.noteText}
             </div>
 
           </div>
@@ -220,8 +293,11 @@ export default function Home() {
             <div className="frame-line"></div>
 
             <img
-              src="/assets/ishwar-profile.jpg"
-              alt="Ishwar Sharma"
+              src={hero.image || "/assets/ishwar-profile.jpg"}
+              alt={`${hero.titleLine1} ${hero.titleLine2}`}
+              onError={(e) => {
+                e.target.src = "/assets/ishwar-profile.jpg";
+              }}
             />
 
           </div>
@@ -232,24 +308,24 @@ export default function Home() {
             <div className="hero-stat">
               <FiLayers />
               <div>
-                <b>2+</b>
-                <span>Years Experience</span>
+                <b>{hero.stat1Number}</b>
+                <span>{hero.stat1Label}</span>
               </div>
             </div>
 
             <div className="hero-stat">
               <FiCode />
               <div>
-                <b>10+</b>
-                <span>Projects Built</span>
+                <b>{hero.stat2Number}</b>
+                <span>{hero.stat2Label}</span>
               </div>
             </div>
 
             <div className="hero-stat">
               <FiCheckCircle />
               <div>
-                <b>100%</b>
-                <span>Commitment</span>
+                <b>{hero.stat3Number}</b>
+                <span>{hero.stat3Label}</span>
               </div>
             </div>
 
@@ -322,21 +398,17 @@ export default function Home() {
         <div className="about-copy">
 
           <div className="eyebrow">
-            ABOUT ME
+            {homeAbout.eyebrow}
           </div>
 
           <h2>
-            Turning Ideas Into
+            {homeAbout.headingMain}
             <br />
-            <span>Real-World Solutions.</span>
+            <span>{homeAbout.headingHighlight}</span>
           </h2>
 
           <p>
-            I'm a Full Stack Developer with a strong foundation in Java,
-            Spring Boot, React and modern web technologies. I enjoy building
-            complete web applications — from intuitive user interfaces to
-            robust backend systems — while continuously improving my
-            development approach.
+            {homeAbout.description}
           </p>
 
           <div className="mini-info">
@@ -348,7 +420,7 @@ export default function Home() {
 
               <div>
                 <small>LOCATION</small>
-                <strong>Rohtak, Haryana</strong>
+                <strong>{homeAbout.location}</strong>
               </div>
             </div>
 
@@ -359,7 +431,7 @@ export default function Home() {
 
               <div>
                 <small>EDUCATION</small>
-                <strong>MCA – MDU Rohtak</strong>
+                <strong>{homeAbout.education}</strong>
               </div>
             </div>
 
@@ -370,14 +442,14 @@ export default function Home() {
 
               <div>
                 <small>EMAIL</small>
-                <strong>ishwarweb@gmail.com</strong>
+                <strong>{homeAbout.email}</strong>
               </div>
             </div>
 
           </div>
 
-          <Link className="outline about-btn" to="/about">
-            <span>More About Me</span>
+          <Link className="outline about-btn" to={homeAbout.btnLink || "/about"}>
+            <span>{homeAbout.btnText}</span>
             <FiArrowRight />
           </Link>
 
@@ -391,19 +463,30 @@ export default function Home() {
           <div className="visual-card">
 
             <div className="visual-top">
-              <span>DEVELOPER</span>
-              <span>01</span>
+              <span>{homeAbout.badgeTop || 'DEVELOPER'}</span>
+              <span>{homeAbout.badgeNumber || '01'}</span>
             </div>
 
             <img
-              src="/assets/ishwar-profile.jpg"
-              alt="Ishwar Sharma"
+              src={homeAbout.image || "/assets/ishwar-profile.jpg"}
+              alt={homeAbout.headingMain || "About Ishwar Sharma"}
+              onError={(e) => {
+                e.target.src = "/assets/ishwar-profile.jpg";
+              }}
             />
 
             <div className="visual-caption">
-              <span>BUILD</span>
-              <span>LEARN</span>
-              <span>GROW</span>
+              {typeof homeAbout.captions === 'string'
+                ? homeAbout.captions.split(',').map((c) => <span key={c}>{c.trim()}</span>)
+                : Array.isArray(homeAbout.captions)
+                ? homeAbout.captions.map((c) => <span key={c}>{c}</span>)
+                : (
+                  <>
+                    <span>BUILD</span>
+                    <span>LEARN</span>
+                    <span>GROW</span>
+                  </>
+                )}
             </div>
 
           </div>

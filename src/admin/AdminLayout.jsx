@@ -54,7 +54,7 @@ export default function AdminLayout() {
   const links = [
     { to: '/admin', label: 'Dashboard', icon: FiHome, end: true },
     { to: '/admin/home', label: 'Home Page', icon: FiHome },
-    { to: '/admin/about', label: 'About Me', icon: FiUser },
+    { to: '/admin/about', label: 'About Page', icon: FiUser },
     { to: '/admin/skills', label: 'Skills', icon: FiCode },
     { to: '/admin/projects', label: 'Projects', icon: FiFolder },
     { to: '/admin/experience', label: 'Experience', icon: FiBriefcase },

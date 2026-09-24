@@ -80,4 +80,22 @@ export const portfolioApi = {
     apiRequest(`/projects/${id}`, {
       method: 'DELETE',
     }),
+
+  // Dynamic Site Content (Home Hero, Home About, Contact Details, etc.)
+  getContent: (key) => apiRequest(`/content/${key}`),
+
+  saveContent: (key, data) =>
+    apiRequest(`/content/${key}`, {
+      method: 'PUT',
+      body: JSON.stringify({ data }),
+    }),
+
+  // Dedicated About Page Content
+  getAbout: () => apiRequest('/about'),
+
+  saveAbout: (data) =>
+    apiRequest('/about', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
 };

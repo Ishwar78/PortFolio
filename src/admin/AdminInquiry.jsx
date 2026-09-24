@@ -35,6 +35,17 @@ export default function AdminInquiry() {
 
   useEffect(() => {
     fetchInquiries();
+    const interval = setInterval(() => {
+      portfolioApi
+        .getInquiries()
+        .then((res) => {
+          if (res && res.inquiries) {
+            setInquiries(res.inquiries);
+          }
+        })
+        .catch(() => {});
+    }, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleMarkAsRead = async (id) => {

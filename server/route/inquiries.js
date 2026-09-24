@@ -63,7 +63,7 @@ router.patch('/:id', async (req, res) => {
     const inquiry = await Inquiry.findByIdAndUpdate(
       req.params.id,
       { status },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     if (!inquiry) {

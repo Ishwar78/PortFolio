@@ -29,6 +29,40 @@ export default function Contact() {
   });
   const [submitting, setSubmitting] = useState(false);
 
+  const defaultContact = {
+    email: "ishwarweb@gmail.com",
+    phone: "Available on request",
+    location: "Rohtak, Haryana, India",
+    city: "Rohtak, Haryana",
+    country: "India",
+    response: "Usually within 24 hours",
+    availability: "Let's Build Something Amazing Together",
+    intro:
+      "I'm always open to discussing new projects, creative ideas, development opportunities, collaborations, or simply having a friendly conversation about technology.",
+    github: "https://github.com/",
+    linkedin: "https://linkedin.com/",
+    twitter: "https://twitter.com/",
+    instagram: "https://instagram.com/",
+    youtube: "https://youtube.com/",
+  };
+
+  const [contactInfo, setContactInfo] = useState(() => {
+    const cached = localStorage.getItem("ishwar_contact_info");
+    return cached ? JSON.parse(cached) : defaultContact;
+  });
+
+  useEffect(() => {
+    portfolioApi
+      .getContent("contact")
+      .then((res) => {
+        if (res && res.data && res.data.email) {
+          setContactInfo(res.data);
+          localStorage.setItem("ishwar_contact_info", JSON.stringify(res.data));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const faqs = [
     [
       "Are you available for freelance work?",
@@ -281,7 +315,7 @@ export default function Contact() {
 
               <div>
                 <span>Email</span>
-                <strong>ishwarweb@gmail.com</strong>
+                <strong>{contactInfo.email}</strong>
               </div>
 
             </div>
@@ -295,7 +329,7 @@ export default function Contact() {
 
               <div>
                 <span>Phone</span>
-                <strong>Available on request</strong>
+                <strong>{contactInfo.phone}</strong>
               </div>
 
             </div>
@@ -309,7 +343,7 @@ export default function Contact() {
 
               <div>
                 <span>Location</span>
-                <strong>Rohtak, Haryana, India</strong>
+                <strong>{contactInfo.location}</strong>
               </div>
 
             </div>
@@ -323,7 +357,7 @@ export default function Contact() {
 
               <div>
                 <span>Response Time</span>
-                <strong>Usually within 24 hours</strong>
+                <strong>{contactInfo.response || contactInfo.responseTime || "Usually within 24 hours"}</strong>
               </div>
 
             </div>
@@ -343,8 +377,8 @@ export default function Contact() {
 
               <div>
                 <span>BASED IN</span>
-                <h3>Rohtak, Haryana</h3>
-                <p>India</p>
+                <h3>{contactInfo.city || 'Rohtak, Haryana'}</h3>
+                <p>{contactInfo.country || 'India'}</p>
               </div>
 
             </div>
@@ -382,55 +416,65 @@ export default function Contact() {
 
         <div className="social-grid">
 
-          <a
-            href="https://github.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FiGithub />
-            <span>GitHub</span>
-            <FiArrowRight className="social-arrow" />
-          </a>
+          {contactInfo.github && (
+            <a
+              href={contactInfo.github}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FiGithub />
+              <span>GitHub</span>
+              <FiArrowRight className="social-arrow" />
+            </a>
+          )}
 
-          <a
-            href="https://linkedin.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FiLinkedin />
-            <span>LinkedIn</span>
-            <FiArrowRight className="social-arrow" />
-          </a>
+          {contactInfo.linkedin && (
+            <a
+              href={contactInfo.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FiLinkedin />
+              <span>LinkedIn</span>
+              <FiArrowRight className="social-arrow" />
+            </a>
+          )}
 
-          <a
-            href="https://twitter.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FiTwitter />
-            <span>Twitter</span>
-            <FiArrowRight className="social-arrow" />
-          </a>
+          {contactInfo.twitter && (
+            <a
+              href={contactInfo.twitter}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FiTwitter />
+              <span>Twitter</span>
+              <FiArrowRight className="social-arrow" />
+            </a>
+          )}
 
-          <a
-            href="https://instagram.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FiInstagram />
-            <span>Instagram</span>
-            <FiArrowRight className="social-arrow" />
-          </a>
+          {contactInfo.instagram && (
+            <a
+              href={contactInfo.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FiInstagram />
+              <span>Instagram</span>
+              <FiArrowRight className="social-arrow" />
+            </a>
+          )}
 
-          <a
-            href="https://youtube.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FiYoutube />
-            <span>YouTube</span>
-            <FiArrowRight className="social-arrow" />
-          </a>
+          {contactInfo.youtube && (
+            <a
+              href={contactInfo.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FiYoutube />
+              <span>YouTube</span>
+              <FiArrowRight className="social-arrow" />
+            </a>
+          )}
 
         </div>
 

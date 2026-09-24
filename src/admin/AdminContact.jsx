@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FiMail,
   FiPhone,
@@ -13,6 +13,7 @@ import {
   FiInstagram,
   FiExternalLink,
 } from 'react-icons/fi';
+import { portfolioApi } from '../lib/api';
 import './AdminContact.css';
 
 export default function AdminContact() {
@@ -20,12 +21,17 @@ export default function AdminContact() {
     email: 'ishwarweb@gmail.com',
     phone: '+91 98765 43210',
     location: 'Rohtak, Haryana, India',
+    city: 'Rohtak, Haryana',
+    country: 'India',
     response: 'Usually within 24 hours',
-    availability: 'Open for Freelance & Full-Time Opportunities',
+    availability: "Let's Build Something Amazing Together",
+    intro:
+      "I'm always open to discussing new projects, creative ideas, development opportunities, collaborations, or simply having a friendly conversation about technology.",
     github: 'https://github.com/',
     linkedin: 'https://linkedin.com/',
     twitter: 'https://twitter.com/',
     instagram: 'https://instagram.com/',
+    youtube: 'https://youtube.com/',
   };
 
   const [data, setData] = useState(() => {
@@ -34,23 +40,41 @@ export default function AdminContact() {
   });
 
   const [saving, setSaving] = useState(false);
-  const [toast, setToast] = useState(false);
+  const [toast, setToast] = useState('');
 
-  const handleSave = () => {
+  // Fetch from MongoDB on mount
+  useEffect(() => {
+    portfolioApi
+      .getContent('contact')
+      .then((res) => {
+        if (res && res.data && res.data.email) {
+          setData(res.data);
+          localStorage.setItem('ishwar_contact_info', JSON.stringify(res.data));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleSave = async () => {
     setSaving(true);
-    localStorage.setItem('ishwar_contact_info', JSON.stringify(data));
-    setTimeout(() => {
+    try {
+      localStorage.setItem('ishwar_contact_info', JSON.stringify(data));
+      await portfolioApi.saveContent('contact', data);
+      setToast('Contact details saved successfully to MongoDB!');
+    } catch (err) {
+      setToast('Saved to local storage!');
+    } finally {
       setSaving(false);
-      setToast(true);
-      setTimeout(() => setToast(false), 3500);
-    }, 400);
+      setTimeout(() => setToast(''), 3500);
+    }
   };
 
   const handleReset = () => {
+    if (!window.confirm('Reset contact details to defaults?')) return;
     setData(defaultContact);
     localStorage.removeItem('ishwar_contact_info');
-    setToast(true);
-    setTimeout(() => setToast(false), 2500);
+    setToast('Reset to defaults.');
+    setTimeout(() => setToast(''), 2500);
   };
 
   return (
@@ -143,6 +167,28 @@ export default function AdminContact() {
                 className="admin-input"
                 value={data.response}
                 onChange={(e) => setData({ ...data, response: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <div className="two-col-inputs">
+            <div className="admin-input-group">
+              <label>City & State (Map Display)</label>
+              <input
+                type="text"
+                className="admin-input"
+                value={data.city || 'Rohtak, Haryana'}
+                onChange={(e) => setData({ ...data, city: e.target.value })}
+              />
+            </div>
+
+            <div className="admin-input-group">
+              <label>Country</label>
+              <input
+                type="text"
+                className="admin-input"
+                value={data.country || 'India'}
+                onChange={(e) => setData({ ...data, country: e.target.value })}
               />
             </div>
           </div>
