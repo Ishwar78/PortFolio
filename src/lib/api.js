@@ -116,4 +116,13 @@ export const portfolioApi = {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
+
+  // Dedicated Experience Page Content
+  getExperience: () => apiRequest('/experience'),
+
+  saveExperience: (data) =>
+    apiRequest('/experience', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
 };

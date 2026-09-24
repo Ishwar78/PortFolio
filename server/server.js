@@ -13,6 +13,7 @@ const contentRouter = require('./route/content');
 const aboutRouter = require('./route/about');
 const contactRouter = require('./route/contact');
 const skillsRouter = require('./route/skills');
+const experienceRouter = require('./route/experience');
 const Inquiry = require('./module/Inquiry');
 const Project = require('./module/Project');
 
@@ -83,6 +84,7 @@ app.use('/api/content', contentRouter);
 app.use('/api/about', aboutRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/skills', skillsRouter);
+app.use('/api/experience', experienceRouter);
 
 // 404 Route handler
 app.use((req, res) => {

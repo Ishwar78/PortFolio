@@ -1,1 +1,275 @@
-import React from 'react';import {Link} from 'react-router-dom';import {FiArrowRight,FiDownload,FiBriefcase,FiCode,FiUsers,FiTrendingUp} from 'react-icons/fi';import CTA from '../components/CTA';import './Experience.css';export default function Experience(){const items=[['Mar 2024 – Present','Technical Supervisor','Wipro (On-Site)','Handling technical operations and team support at client site. Working on system maintenance, troubleshooting and user support.','Full-time'],['Mar 2022 – Mar 2024','HVAC Plant','DLF Corporate Greens, Gurugram','Worked in HVAC plant operations and technical systems, managing maintenance and day-to-day operations.','Full-time'],['Sep 2023 – Feb 2024','Full Stack Developer (Intern)','AAM Infotech Pvt. Ltd., Gurugram','Worked on Java, Spring Boot, REST APIs, MySQL and frontend technologies. Built and tested web applications.','Internship'],['2019 – 2024','BCA & MCA','Maharshi Dayanand University, Rohtak (MDU)','Completed BCA and MCA with a strong foundation in computer applications and software development.','Education']];return <main className="experience-page"><section className="exp-hero"><div><small>MY EXPERIENCE</small><h1>A Journey of<br/><span>Learning & Building</span></h1><p>Every experience has shaped me into a better developer. Here's a timeline of my professional journey, internships and the skills I've gained along the way.</p><div><a href="/resume.pdf"><FiDownload/> Download Resume</a><Link to="/contact">Let's Connect <FiArrowRight/></Link></div></div><img src="/assets/experience-preview.png" alt="Developer workspace"/></section><section className="exp-stats"><div><FiBriefcase/><b>3+<small>Years Experience</small></b></div><div><FiCode/><b>10+<small>Projects Completed</small></b></div><div><FiUsers/><b>4+<small>Companies/Clients</small></b></div><div><FiTrendingUp/><b>100%<small>Continuous Learning</small></b></div></section><section className="timeline"><small>MY PROFESSIONAL JOURNEY</small><h2>Work Experience Timeline</h2><div>{items.map(x=><article key={x[1]}><time>{x[0]}</time><div className="timeline-card"><div className="company-icon"><FiBriefcase/></div><section><h3>{x[1]}</h3><b>{x[2]}</b><p>{x[3]}</p></section><span>{x[4]}</span></div></article>)}</div></section><section className="tools"><h2>Tools & Environments I've Worked With</h2><div>{['Windows','Linux','MySQL','Git','GitHub','VS Code','Postman','Docker','AWS','Nginx','XAMPP','Figma'].map(t=><span key={t}><FiCode/>{t}</span>)}</div></section><CTA/></main>}
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  FiArrowRight,
+  FiDownload,
+  FiBriefcase,
+  FiCode,
+  FiUsers,
+  FiTrendingUp,
+} from 'react-icons/fi';
+import CTA from '../components/CTA';
+import IshwarChatbot from '../components/IshwarChatbot';
+import { portfolioApi } from '../lib/api';
+import './Experience.css';
+
+const defaultExperience = {
+  hero: {
+    eyebrow: 'MY EXPERIENCE',
+    headingLine1: 'A Journey of',
+    headingHighlight: 'Learning & Building',
+    description:
+      "Every experience has shaped me into a better developer. Here's a timeline of my professional journey, internships and the skills I've gained along the way.",
+    resumeLink: '/resume.pdf',
+    resumeText: 'Download Resume',
+    connectLink: '/contact',
+    connectText: "Let's Connect",
+    image: '/assets/experience-preview.png',
+  },
+  stats: {
+    stat1Value: '3+',
+    stat1Label: 'Years Experience',
+    stat2Value: '10+',
+    stat2Label: 'Projects Completed',
+    stat3Value: '4+',
+    stat3Label: 'Companies/Clients',
+    stat4Value: '100%',
+    stat4Label: 'Continuous Learning',
+  },
+  timeline: {
+    eyebrow: 'MY PROFESSIONAL JOURNEY',
+    heading: 'Work Experience Timeline',
+    items: [
+      {
+        role: 'Technical Supervisor',
+        company: 'Wipro (On-Site)',
+        period: 'Mar 2024 – Present',
+        location: 'Gurugram, Haryana',
+        type: 'Full-time',
+        description:
+          'Handling technical operations and team support at client site. Working on system maintenance, troubleshooting and user support.',
+        technologies: ['Technical Operations', 'Troubleshooting', 'System Support'],
+        image: '',
+      },
+      {
+        role: 'HVAC Plant Operations',
+        company: 'DLF Corporate Greens, Gurugram',
+        period: 'Mar 2022 – Mar 2024',
+        location: 'Gurugram, Haryana',
+        type: 'Full-time',
+        description:
+          'Worked in HVAC plant operations and technical systems, managing maintenance and day-to-day operations.',
+        technologies: ['Plant Operations', 'Maintenance', 'Diagnostics'],
+        image: '',
+      },
+      {
+        role: 'Full Stack Developer (Intern)',
+        company: 'AAM Infotech Pvt. Ltd., Gurugram',
+        period: 'Sep 2023 – Feb 2024',
+        location: 'Gurugram, Haryana',
+        type: 'Internship',
+        description:
+          'Worked on Java, Spring Boot, REST APIs, MySQL and frontend technologies. Built and tested web applications.',
+        technologies: ['Java', 'Spring Boot', 'REST APIs', 'MySQL', 'React'],
+        image: '',
+      },
+      {
+        role: 'BCA & MCA',
+        company: 'Maharshi Dayanand University, Rohtak (MDU)',
+        period: '2019 – 2024',
+        location: 'Rohtak, Haryana',
+        type: 'Education',
+        description:
+          'Completed BCA and MCA with a strong foundation in computer applications and software development.',
+        technologies: ['Computer Science', 'Software Engineering', 'Data Structures'],
+        image: '',
+      },
+    ],
+  },
+  tools: {
+    heading: "Tools & Environments I've Worked With",
+    list: [
+      'Windows',
+      'Linux',
+      'MySQL',
+      'Git',
+      'GitHub',
+      'VS Code',
+      'Postman',
+      'Docker',
+      'AWS',
+      'Nginx',
+      'XAMPP',
+      'Figma',
+    ],
+  },
+};
+
+export default function Experience() {
+  const [data, setData] = useState(() => {
+    const cached = localStorage.getItem('ishwar_experience_page_data');
+    return cached ? JSON.parse(cached) : defaultExperience;
+  });
+
+  useEffect(() => {
+    portfolioApi
+      .getExperience()
+      .then((res) => {
+        if (res && res.data && res.data.hero) {
+          setData(res.data);
+          localStorage.setItem(
+            'ishwar_experience_page_data',
+            JSON.stringify(res.data)
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const hero = data?.hero || defaultExperience.hero;
+  const stats = data?.stats || defaultExperience.stats;
+  const timeline = data?.timeline || defaultExperience.timeline;
+  const tools = data?.tools || defaultExperience.tools;
+  const items = timeline?.items || defaultExperience.timeline.items;
+  const toolsList = tools?.list || defaultExperience.tools.list;
+
+  return (
+    <main className="experience-page">
+      {/* =====================================================
+          HERO SECTION
+      ====================================================== */}
+      <section className="exp-hero">
+        <div>
+          <small>{hero.eyebrow || 'MY EXPERIENCE'}</small>
+          <h1>
+            {hero.headingLine1 || 'A Journey of'}
+            <br />
+            <span>{hero.headingHighlight || 'Learning & Building'}</span>
+          </h1>
+          <p>{hero.description}</p>
+          <div>
+            <a
+              href={hero.resumeLink || '/resume.pdf'}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FiDownload /> {hero.resumeText || 'Download Resume'}
+            </a>
+            <Link to={hero.connectLink || '/contact'}>
+              {hero.connectText || "Let's Connect"} <FiArrowRight />
+            </Link>
+          </div>
+        </div>
+
+        <img
+          src={hero.image || '/assets/experience-preview.png'}
+          alt="Developer workspace"
+          onError={(e) => {
+            e.target.src = '/assets/experience-preview.png';
+          }}
+        />
+      </section>
+
+      {/* =====================================================
+          EXPERIENCE STATS
+      ====================================================== */}
+      <section className="exp-stats">
+        <div>
+          <FiBriefcase />
+          <b>
+            {stats.stat1Value || '3+'}
+            <small>{stats.stat1Label || 'Years Experience'}</small>
+          </b>
+        </div>
+        <div>
+          <FiCode />
+          <b>
+            {stats.stat2Value || '10+'}
+            <small>{stats.stat2Label || 'Projects Completed'}</small>
+          </b>
+        </div>
+        <div>
+          <FiUsers />
+          <b>
+            {stats.stat3Value || '4+'}
+            <small>{stats.stat3Label || 'Companies/Clients'}</small>
+          </b>
+        </div>
+        <div>
+          <FiTrendingUp />
+          <b>
+            {stats.stat4Value || '100%'}
+            <small>{stats.stat4Label || 'Continuous Learning'}</small>
+          </b>
+        </div>
+      </section>
+
+      {/* =====================================================
+          TIMELINE
+      ====================================================== */}
+      <section className="timeline">
+        <small>{timeline.eyebrow || 'MY PROFESSIONAL JOURNEY'}</small>
+        <h2>{timeline.heading || 'Work Experience Timeline'}</h2>
+
+        <div>
+          {items && items.length > 0 ? (
+            items.map((item, idx) => (
+              <article key={item._id || idx}>
+                <time>{item.period}</time>
+                <div className="timeline-card">
+                  <div className="company-icon">
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt={item.company}
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          objectFit: 'contain',
+                          borderRadius: '4px',
+                        }}
+                      />
+                    ) : (
+                      <FiBriefcase />
+                    )}
+                  </div>
+                  <section>
+                    <h3>{item.role}</h3>
+                    <b>
+                      {item.company}
+                      {item.location ? ` • ${item.location}` : ''}
+                    </b>
+                    <p>{item.description}</p>
+                  </section>
+                  <span>{item.type || 'Full-time'}</span>
+                </div>
+              </article>
+            ))
+          ) : (
+            <p style={{ color: 'var(--muted)', padding: '20px' }}>
+              No experience entries listed yet.
+            </p>
+          )}
+        </div>
+      </section>
+
+      {/* =====================================================
+          TOOLS & ENVIRONMENTS
+      ====================================================== */}
+      <section className="tools">
+        <h2>{tools.heading || "Tools & Environments I've Worked With"}</h2>
+        <div>
+          {toolsList.map((t) => (
+            <span key={t}>
+              <FiCode />
+              {t}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <CTA />
+      <IshwarChatbot />
+    </main>
+  );
+}
