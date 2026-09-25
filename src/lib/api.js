@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:6095';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://portfolio-m073.onrender.com';
 
 export async function apiRequest(endpoint, options = {}) {
   const token = localStorage.getItem('ishwar_admin_token');
