@@ -81,6 +81,11 @@ export const portfolioApi = {
       method: 'DELETE',
     }),
 
+  toggleProjectPin: (id) =>
+    apiRequest(`/projects/${id}/pin`, {
+      method: 'PATCH',
+    }),
+
   // Dynamic Site Content (Home Hero, Home About, Contact Details, etc.)
   getContent: (key) => apiRequest(`/content/${key}`),
 

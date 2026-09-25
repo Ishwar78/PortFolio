@@ -470,3 +470,54 @@
     transform: rotate(360deg);
   }
 }
+
+/* =========================================================
+   MOBILE RESPONSIVENESS (< 768px)
+========================================================= */
+
+@media (max-width: 768px) {
+  .botleads-page {
+    padding: 4px 0 60px;
+  }
+
+  .botlead-card {
+    padding: 16px 14px;
+  }
+
+  .botlead-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .lead-contact-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .botleads-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .filter-pills {
+    overflow-x: auto;
+    display: flex;
+    scrollbar-width: none;
+  }
+
+  .filter-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .toolbar-search {
+    width: 100%;
+    min-width: unset;
+  }
+}

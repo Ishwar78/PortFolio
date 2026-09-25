@@ -137,7 +137,12 @@ export default function Home() {
       .getProjects()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setHomeProjects(data.slice(0, 3));
+          // Sort pinned projects first
+          const sorted = [...data].sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
+          const pinnedList = sorted.filter((p) => p.isPinned);
+          // Show up to 6 pinned projects or 3 default
+          const countToShow = Math.min(6, Math.max(3, pinnedList.length));
+          setHomeProjects(sorted.slice(0, countToShow));
         }
       })
       .catch(() => {});
@@ -648,8 +653,8 @@ export default function Home() {
                     {String(index + 1).padStart(2, '0')}
                   </span>
 
-                  <span className="project-featured">
-                    FEATURED
+                  <span className={`project-featured ${project.isPinned ? 'is-pinned-tag' : ''}`}>
+                    {project.isPinned ? '📌 PINNED' : 'FEATURED'}
                   </span>
 
                   <Link

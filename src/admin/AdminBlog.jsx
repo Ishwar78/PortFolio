@@ -74,6 +74,7 @@ export default function AdminBlog() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('All');
   const [toast, setToast] = useState('');
+  const [activeModalTab, setActiveModalTab] = useState('content'); // 'content' | 'seo'
 
   const initialForm = {
     title: '',
@@ -91,6 +92,10 @@ export default function AdminBlog() {
     tags: 'React, Java, Spring Boot',
     published: true,
     featured: false,
+    metaTitle: '',
+    metaDescription: '',
+    metaKeywords: '',
+    canonicalUrl: '',
   };
 
   const [formData, setFormData] = useState(initialForm);
@@ -120,6 +125,7 @@ export default function AdminBlog() {
     setIsEditing(false);
     setEditId(null);
     setFormData(initialForm);
+    setActiveModalTab('content');
     setShowModal(true);
   };
 
@@ -138,7 +144,12 @@ export default function AdminBlog() {
       tags: Array.isArray(blog.tags) ? blog.tags.join(', ') : blog.tags || '',
       published: blog.published !== undefined ? blog.published : true,
       featured: Boolean(blog.featured),
+      metaTitle: blog.metaTitle || blog.title || '',
+      metaDescription: blog.metaDescription || blog.excerpt || '',
+      metaKeywords: blog.metaKeywords || (Array.isArray(blog.tags) ? blog.tags.join(', ') : blog.tags || ''),
+      canonicalUrl: blog.canonicalUrl || '',
     });
+    setActiveModalTab('content');
     setShowModal(true);
   };
 
@@ -189,6 +200,10 @@ export default function AdminBlog() {
       tags: formData.tags,
       published: formData.published,
       featured: formData.featured,
+      metaTitle: formData.metaTitle.trim() || formData.title.trim(),
+      metaDescription: formData.metaDescription.trim() || formData.excerpt.trim(),
+      metaKeywords: formData.metaKeywords.trim() || (typeof formData.tags === 'string' ? formData.tags : ''),
+      canonicalUrl: formData.canonicalUrl.trim(),
     };
 
     try {
@@ -448,148 +463,257 @@ export default function AdminBlog() {
               </button>
             </div>
 
+            {/* Modal Tabs Header */}
+            <div className="modal-nav-tabs">
+              <button
+                type="button"
+                className={`modal-tab ${activeModalTab === 'content' ? 'active' : ''}`}
+                onClick={() => setActiveModalTab('content')}
+              >
+                1. Article Content & Media
+              </button>
+              <button
+                type="button"
+                className={`modal-tab ${activeModalTab === 'seo' ? 'active' : ''}`}
+                onClick={() => setActiveModalTab('seo')}
+              >
+                2. SEO Meta Tags & Search Preview
+              </button>
+            </div>
+
             <form onSubmit={handleSubmit} className="blog-modal-form">
               <div className="modal-scroll-body">
-                <div className="form-group">
-                  <label>
-                    Article Title <span className="req">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. How I Build Modern Full Stack Web Applications"
-                    value={formData.title}
-                    onChange={handleTitleChange}
-                    required
-                  />
-                </div>
-
-                <div className="form-row-dual">
-                  <div className="form-group">
-                    <label>Article Slug (URL Path)</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. how-i-build-modern-full-stack-web-applications"
-                      value={formData.slug}
-                      onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                    />
-                    <small className="field-hint">Accessible at /blog/{formData.slug || 'your-slug'}</small>
-                  </div>
-
-                  <div className="form-group">
-                    <label>Category</label>
-                    <select
-                      value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    >
-                      <option value="Development">Development</option>
-                      <option value="React">React</option>
-                      <option value="Java">Java / Spring Boot</option>
-                      <option value="Career">Career & Journey</option>
-                      <option value="Programming">Programming</option>
-                      <option value="Tutorials">Tutorials</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="form-row-dual">
-                  <div className="form-group">
-                    <label>Reading Time</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. 5 min read"
-                      value={formData.readTime}
-                      onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Publication Date</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Sep 24, 2026"
-                      value={formData.date}
-                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label>Excerpt / Short Summary (Shown on Blog Cards)</label>
-                  <textarea
-                    rows="2"
-                    placeholder="Brief 1-2 sentence preview for visitors..."
-                    value={formData.excerpt}
-                    onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                  />
-                </div>
-
-                {/* Cover Image Upload */}
-                <div className="form-group upload-section-card">
-                  <label className="section-subtitle">
-                    Article Cover Image (Upload from Device)
-                  </label>
-                  <div className="upload-controls-row">
-                    <label className="file-upload-dropzone">
-                      <FiUploadCloud className="upload-cloud-icon" />
-                      <span className="upload-prompt-text">
-                        Click to browse and upload cover image
-                      </span>
+                {activeModalTab === 'content' && (
+                  <>
+                    <div className="form-group">
+                      <label>
+                        Article Title <span className="req">*</span>
+                      </label>
                       <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        style={{ display: 'none' }}
+                        type="text"
+                        placeholder="e.g. How I Build Modern Full Stack Web Applications"
+                        value={formData.title}
+                        onChange={handleTitleChange}
+                        required
                       />
-                    </label>
+                    </div>
 
-                    {formData.image && (
-                      <div className="image-preview-box">
-                        <img
-                          src={formData.image}
-                          alt="Cover Preview"
-                          onError={(e) => (e.target.src = '/assets/projects-preview.png')}
+                    <div className="form-row-dual">
+                      <div className="form-group">
+                        <label>Article Slug (URL Path)</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. how-i-build-modern-full-stack-web-applications"
+                          value={formData.slug}
+                          onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                         />
-                        <span className="preview-label">Cover Preview</span>
+                        <small className="field-hint">Accessible at /blog/{formData.slug || 'your-slug'}</small>
                       </div>
-                    )}
+
+                      <div className="form-group">
+                        <label>Category</label>
+                        <select
+                          value={formData.category}
+                          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        >
+                          <option value="Development">Development</option>
+                          <option value="React">React</option>
+                          <option value="Java">Java / Spring Boot</option>
+                          <option value="Career">Career & Journey</option>
+                          <option value="Programming">Programming</option>
+                          <option value="Tutorials">Tutorials</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="form-row-dual">
+                      <div className="form-group">
+                        <label>Reading Time</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. 5 min read"
+                          value={formData.readTime}
+                          onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label>Publication Date</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. Sep 24, 2026"
+                          value={formData.date}
+                          onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label>Excerpt / Short Summary (Shown on Blog Cards)</label>
+                      <textarea
+                        rows="2"
+                        placeholder="Brief 1-2 sentence preview for visitors..."
+                        value={formData.excerpt}
+                        onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                      />
+                    </div>
+
+                    {/* Cover Image Upload */}
+                    <div className="form-group upload-section-card">
+                      <label className="section-subtitle">
+                        Article Cover Image (Upload from Device)
+                      </label>
+                      <div className="upload-controls-row">
+                        <label className="file-upload-dropzone">
+                          <FiUploadCloud className="upload-cloud-icon" />
+                          <span className="upload-prompt-text">
+                            Click to browse and upload cover image
+                          </span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            style={{ display: 'none' }}
+                          />
+                        </label>
+
+                        {formData.image && (
+                          <div className="image-preview-box">
+                            <img
+                              src={formData.image}
+                              alt="Cover Preview"
+                              onError={(e) => (e.target.src = '/assets/projects-preview.png')}
+                            />
+                            <span className="preview-label">Cover Preview</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Rich Text Editor for Content */}
+                    <div className="form-group">
+                      <label>
+                        Complete Article Content (Rich Text Editor) <span className="req">*</span>
+                      </label>
+                      <small className="field-hint" style={{ marginBottom: '8px', display: 'block' }}>
+                        Use the toolbar to format Headings (H2, H3), bold text, bullet points, quotes, code blocks, and links.
+                      </small>
+                      <RichTextEditor
+                        value={formData.content}
+                        onChange={(html) => setFormData({ ...formData, content: html })}
+                        placeholder="Start writing your article here..."
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Tags (Comma separated)</label>
+                      <input
+                        type="text"
+                        placeholder="React, Java, Spring Boot, Architecture"
+                        value={formData.tags}
+                        onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="form-footer-switches">
+                      <label className="checkbox-active-label">
+                        <input
+                          type="checkbox"
+                          checked={formData.published}
+                          onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                        />
+                        <span>Publish Immediately (Make article live on portfolio)</span>
+                      </label>
+                    </div>
+                  </>
+                )}
+
+                {/* TAB 2: SEO META TAGS */}
+                {activeModalTab === 'seo' && (
+                  <div className="seo-tab-container">
+                    <div className="seo-intro-banner">
+                      <h4>🔍 Search Engine Optimization (SEO) & Social Sharing</h4>
+                      <p>
+                        Configure SEO Title, Meta Keywords, and Meta Description. These tags will be injected directly into the HTML source code (visible with <strong>Ctrl + U</strong>) and displayed in the browser tab and browser DevTools Console.
+                      </p>
+                    </div>
+
+                    {/* Google SERP Snippet Preview */}
+                    <div className="seo-google-card">
+                      <div className="google-preview-header">
+                        <span className="google-icon-pill">G</span>
+                        <div className="google-url-line">
+                          https://ishwarweb.in › blog › {formData.slug || 'article-slug'}
+                        </div>
+                      </div>
+                      <div className="google-title-preview">
+                        {formData.metaTitle || formData.title || 'Article Title | Ishwar Sharma'}
+                      </div>
+                      <div className="google-desc-preview">
+                        {formData.metaDescription || formData.excerpt || 'Comprehensive technical breakdown and tutorial for developers building full-stack web applications.'}
+                      </div>
+                    </div>
+
+                    <div className="form-group" style={{ marginTop: '16px' }}>
+                      <label>
+                        SEO Meta Title
+                        <span className="char-count-pill">
+                          {(formData.metaTitle || formData.title).length} / 60 chars
+                        </span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder={formData.title || 'e.g. How I Build Scalable Full Stack Web Applications'}
+                        value={formData.metaTitle}
+                        onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
+                      />
+                      <small className="field-hint">
+                        Target 50-60 characters. Shows in search engine results and browser tabs.
+                      </small>
+                    </div>
+
+                    <div className="form-group">
+                      <label>
+                        SEO Meta Description
+                        <span className="char-count-pill">
+                          {(formData.metaDescription || formData.excerpt).length} / 160 chars
+                        </span>
+                      </label>
+                      <textarea
+                        rows="3"
+                        placeholder={formData.excerpt || 'Brief description for search engines and social link previews...'}
+                        value={formData.metaDescription}
+                        onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+                      />
+                      <small className="field-hint">
+                        Target 140-160 characters. Appears as snippet text below your title in Google search.
+                      </small>
+                    </div>
+
+                    <div className="form-group">
+                      <label>SEO Meta Keywords (Comma separated)</label>
+                      <input
+                        type="text"
+                        placeholder="React, Java, Spring Boot, Full Stack Development, REST API, Portfolio"
+                        value={formData.metaKeywords}
+                        onChange={(e) => setFormData({ ...formData, metaKeywords: e.target.value })}
+                      />
+                      <small className="field-hint">
+                        Keywords indexed by search engine bots and stored in &lt;meta name="keywords"&gt;.
+                      </small>
+                    </div>
+
+                    <div className="form-group">
+                      <label>Canonical URL (Optional)</label>
+                      <input
+                        type="text"
+                        placeholder={`https://ishwarweb.in/blog/${formData.slug || 'article-slug'}`}
+                        value={formData.canonicalUrl}
+                        onChange={(e) => setFormData({ ...formData, canonicalUrl: e.target.value })}
+                      />
+                    </div>
                   </div>
-                </div>
-
-                {/* Rich Text Editor for Content */}
-                <div className="form-group">
-                  <label>
-                    Complete Article Content (Rich Text Editor) <span className="req">*</span>
-                  </label>
-                  <small className="field-hint" style={{ marginBottom: '8px', display: 'block' }}>
-                    Use the toolbar to format Headings (H2, H3), bold text, bullet points, quotes, code blocks, and links.
-                  </small>
-                  <RichTextEditor
-                    value={formData.content}
-                    onChange={(html) => setFormData({ ...formData, content: html })}
-                    placeholder="Start writing your article here..."
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Tags (Comma separated)</label>
-                  <input
-                    type="text"
-                    placeholder="React, Java, Spring Boot, Architecture"
-                    value={formData.tags}
-                    onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                  />
-                </div>
-
-                <div className="form-footer-switches">
-                  <label className="checkbox-active-label">
-                    <input
-                      type="checkbox"
-                      checked={formData.published}
-                      onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                    />
-                    <span>Publish Immediately (Make article live on portfolio)</span>
-                  </label>
-                </div>
+                )}
               </div>
 
               <div className="modal-footer-actions">

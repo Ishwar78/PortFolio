@@ -609,3 +609,29 @@
   font-size: 13px;
   margin: 0;
 }
+
+/* =========================================================
+   MOBILE RESPONSIVENESS (< 768px)
+========================================================= */
+
+@media (max-width: 768px) {
+  .chatbot-qa-page {
+    padding: 4px 0 60px;
+  }
+
+  .qa-admin-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .chatbot-qa-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .qa-search-box {
+    width: 100%;
+    min-width: unset;
+  }
+}

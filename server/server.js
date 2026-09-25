@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
@@ -102,7 +103,106 @@ app.use('/api/experience', experienceRouter);
 app.use('/api/chatbot', chatbotRouter);
 app.use('/api/blogs', blogsRouter);
 
-// 404 Route handler
+// =====================================================
+// DYNAMIC SEO META TAG INJECTOR FOR BLOGS & WEB PAGES
+// Enables SEO Title, Description, Keywords to appear in:
+// 1. Browser Tab & Page Elements
+// 2. DevTools Console (styled logs)
+// 3. Page Source Code (Ctrl + U)
+// =====================================================
+const serveWithSeoMeta = async (req, res, next) => {
+  const distHtml = path.join(__dirname, '..', 'dist', 'index.html');
+  const rootHtml = path.join(__dirname, '..', 'index.html');
+  const templatePath = fs.existsSync(distHtml) ? distHtml : (fs.existsSync(rootHtml) ? rootHtml : null);
+
+  if (!templatePath) {
+    return next();
+  }
+
+  try {
+    let html = fs.readFileSync(templatePath, 'utf8');
+    const slug = req.params.slug;
+
+    let seoTitle = 'Ishwar Sharma | Full Stack Developer';
+    let seoDesc = 'Full-stack software developer specializing in React, Node.js, Spring Boot, MySQL, and scalable cloud solutions.';
+    let seoKeywords = 'Ishwar Sharma, Full Stack Developer, React, Node.js, Spring Boot, Web Development, Portfolio';
+    let seoImg = '/assets/projects-preview.png';
+    let pageUrl = `https://ishwarweb.in/blog/${slug || ''}`;
+
+    if (slug) {
+      let blog = null;
+      if (slug.match(/^[0-9a-fA-F]{24}$/)) {
+        blog = await Blog.findById(slug);
+      }
+      if (!blog) {
+        blog = await Blog.findOne({ slug });
+      }
+
+      if (blog) {
+        seoTitle = blog.metaTitle || blog.title || seoTitle;
+        seoDesc = blog.metaDescription || blog.excerpt || seoDesc;
+        seoKeywords = blog.metaKeywords || (Array.isArray(blog.tags) ? blog.tags.join(', ') : '') || seoKeywords;
+        seoImg = blog.image || seoImg;
+      }
+    }
+
+    const clean = (str = '') => String(str).replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    const metaTags = `
+    <!-- Dynamic SEO Meta Tags (Visible in Ctrl+U Source Code) -->
+    <title>${clean(seoTitle)} | Ishwar Sharma</title>
+    <meta name="title" content="${clean(seoTitle)}" />
+    <meta name="description" content="${clean(seoDesc)}" />
+    <meta name="keywords" content="${clean(seoKeywords)}" />
+    <meta name="author" content="Ishwar Sharma" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="${pageUrl}" />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="${pageUrl}" />
+    <meta property="og:title" content="${clean(seoTitle)}" />
+    <meta property="og:description" content="${clean(seoDesc)}" />
+    <meta property="og:image" content="${seoImg}" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="${pageUrl}" />
+    <meta name="twitter:title" content="${clean(seoTitle)}" />
+    <meta name="twitter:description" content="${clean(seoDesc)}" />
+    <meta name="twitter:image" content="${seoImg}" />
+    `;
+
+    // Remove old title and inject metaTags before </head>
+    html = html.replace(/<title>.*?<\/title>/i, '');
+    html = html.replace('</head>', `${metaTags}\n  </head>`);
+
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    return res.send(html);
+  } catch (error) {
+    console.error('Error injecting dynamic SEO tags:', error);
+    return next();
+  }
+};
+
+// Route for blog details with SEO metadata injected
+app.get('/blog/:slug', serveWithSeoMeta);
+
+// Serve static build if dist directory exists
+const distDir = path.join(__dirname, '..', 'dist');
+if (fs.existsSync(distDir)) {
+  app.use(express.static(distDir));
+
+  // SPA fallback for all other frontend routes
+  app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.originalUrl.startsWith('/api')) {
+      return res.sendFile(path.join(distDir, 'index.html'));
+    }
+    next();
+  });
+}
+
+// 404 Route handler for unhandled API routes
 app.use((req, res) => {
   res.status(404).json({ success: false, message: `Route ${req.originalUrl} not found.` });
 });

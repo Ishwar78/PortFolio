@@ -181,3 +181,34 @@
   color: #38bdf8;
   text-decoration: underline;
 }
+
+@media (max-width: 600px) {
+  .rte-toolbar {
+    gap: 6px;
+    padding: 6px 8px;
+  }
+
+  .rte-group {
+    padding-right: 4px;
+    gap: 2px;
+  }
+
+  .rte-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .rte-tabs {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 4px;
+  }
+
+  .rte-content-area,
+  .rte-preview-area {
+    padding: 12px;
+    min-height: 180px;
+  }
+}

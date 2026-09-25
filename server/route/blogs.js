@@ -155,8 +155,23 @@ router.get('/:slug', async (req, res) => {
 // POST /api/blogs - Create new blog article
 router.post('/', async (req, res) => {
   try {
-    const { title, slug, category, excerpt, content, image, date, readTime, tags, featured, published } =
-      req.body;
+    const {
+      title,
+      slug,
+      category,
+      excerpt,
+      content,
+      image,
+      date,
+      readTime,
+      tags,
+      featured,
+      published,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+      canonicalUrl,
+    } = req.body;
 
     if (!title || !title.trim()) {
       return res.status(400).json({ success: false, message: 'Article title is required.' });
@@ -192,6 +207,10 @@ router.post('/', async (req, res) => {
       tags: parsedTags,
       featured: Boolean(featured),
       published: published !== undefined ? Boolean(published) : true,
+      metaTitle: metaTitle ? metaTitle.trim() : title.trim(),
+      metaDescription: metaDescription ? metaDescription.trim() : (excerpt ? excerpt.trim() : ''),
+      metaKeywords: metaKeywords ? metaKeywords.trim() : parsedTags.join(', '),
+      canonicalUrl: canonicalUrl ? canonicalUrl.trim() : '',
     });
 
     await newBlog.save();

@@ -190,18 +190,20 @@ export default function Projects() {
       .getProjects()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setProjectList(
-            data.map((p) => ({
-              id: p.slug || p._id || p.id,
-              title: p.title,
-              desc: p.desc,
-              img: p.img || '/assets/projects-preview.png',
-              tags: Array.isArray(p.tags) ? p.tags : [],
-              cat: p.category || 'Full Stack',
-              liveUrl: p.liveUrl || '',
-              githubUrl: p.githubUrl || 'https://github.com/Ishwar78',
-            }))
-          );
+          const mapped = data.map((p) => ({
+            id: p.slug || p._id || p.id,
+            title: p.title,
+            desc: p.desc,
+            img: p.img || '/assets/projects-preview.png',
+            tags: Array.isArray(p.tags) ? p.tags : [],
+            cat: p.category || 'Full Stack',
+            liveUrl: p.liveUrl || '',
+            githubUrl: p.githubUrl || 'https://github.com/Ishwar78',
+            isPinned: Boolean(p.isPinned),
+          }));
+          // Pinned projects first!
+          mapped.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
+          setProjectList(mapped);
         }
       })
       .catch((err) => {
@@ -423,33 +425,32 @@ export default function Projects() {
           {filtered.length > 0 ? (
 
             filtered.map((p) => (
-
               <article
                 key={p.id}
+                className={p.isPinned ? 'project-card-is-pinned' : ''}
                 onClick={() => navigate(`/projects/${p.id}`)}
                 style={{ cursor: 'pointer' }}
               >
-
-
                 {/* PROJECT IMAGE */}
-
                 <div className="image-wrap">
-
                   <img
                     src={p.img}
                     alt={p.title}
-
                     onError={(e) => {
                       e.target.src =
                         '/assets/projects-preview.png';
                     }}
                   />
 
-
-                  <span>
-                    Featured
-                  </span>
-
+                  {p.isPinned ? (
+                    <span className="pinned-badge-project">
+                      📌 Pinned
+                    </span>
+                  ) : (
+                    <span>
+                      Featured
+                    </span>
+                  )}
                 </div>
 
 

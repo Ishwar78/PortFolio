@@ -110,6 +110,7 @@ export default function AdminProjects() {
     status: 'Completed',
     duration: '3+ Months',
     role: 'Full Stack Developer',
+    isPinned: false,
     img: '/assets/projects-preview.png',
     gallery: [],
     overview: '',
@@ -124,6 +125,12 @@ export default function AdminProjects() {
   };
 
   const [formData, setFormData] = useState(initialFormState);
+
+  // Pinned count (max 6)
+  const pinnedCount = useMemo(
+    () => projects.filter((p) => p.isPinned).length,
+    [projects]
+  );
 
   // Load from API / MongoDB
   const fetchProjects = async () => {
@@ -147,6 +154,57 @@ export default function AdminProjects() {
     fetchProjects();
   }, []);
 
+  // Quick toggle pin state
+  const handleTogglePin = async (p) => {
+    const projId = p._id || p.id || p.slug;
+    const isCurrentlyPinned = Boolean(p.isPinned);
+
+    if (!isCurrentlyPinned && pinnedCount >= 6) {
+      setToast('⚠️ Maximum 6 projects can be pinned! Please unpin another project first.');
+      setTimeout(() => setToast(''), 4000);
+      return;
+    }
+
+    const nextState = !isCurrentlyPinned;
+
+    // Optimistic UI update
+    setProjects((prev) =>
+      prev.map((item) =>
+        (item._id === projId || item.slug === projId || item.id === projId)
+          ? { ...item, isPinned: nextState }
+          : item
+      )
+    );
+
+    try {
+      const res = await portfolioApi.toggleProjectPin(projId);
+      if (res && res.success) {
+        setToast(nextState ? '📌 Project pinned to top (Max 6)!' : 'Project unpinned successfully.');
+      } else {
+        // Revert on failure
+        setProjects((prev) =>
+          prev.map((item) =>
+            (item._id === projId || item.slug === projId || item.id === projId)
+              ? { ...item, isPinned: isCurrentlyPinned }
+              : item
+          )
+        );
+        setToast(res?.message || 'Failed to update pin state.');
+      }
+    } catch (err) {
+      console.error('Error toggling project pin:', err);
+      setProjects((prev) =>
+        prev.map((item) =>
+          (item._id === projId || item.slug === projId || item.id === projId)
+            ? { ...item, isPinned: isCurrentlyPinned }
+            : item
+        )
+      );
+      setToast(err?.message || 'Server error toggling pin.');
+    }
+    setTimeout(() => setToast(''), 3500);
+  };
+
   const openCreateModal = () => {
     setIsEditing(false);
     setEditId(null);
@@ -169,6 +227,7 @@ export default function AdminProjects() {
       status: p.status || 'Completed',
       duration: p.duration || '3+ Months',
       role: p.role || 'Full Stack Developer',
+      isPinned: Boolean(p.isPinned),
       img: p.img || '/assets/projects-preview.png',
       gallery: Array.isArray(p.gallery) ? p.gallery : [],
       overview: p.overview || '',
@@ -323,6 +382,7 @@ export default function AdminProjects() {
       status: formData.status,
       duration: formData.duration,
       role: formData.role,
+      isPinned: Boolean(formData.isPinned),
       img: formData.img,
       gallery: formData.gallery,
       overview: formData.overview,
@@ -412,6 +472,11 @@ export default function AdminProjects() {
           <p>
             Add, edit, upload screenshots, and manage complete project cards and individual detail pages. All changes sync in real-time across Home & Projects pages.
           </p>
+          <div className="pinned-count-indicator">
+            <span className="pin-indicator-icon">📌</span>
+            <span>Pinned to Top: <strong>{pinnedCount} / 6 Projects</strong></span>
+            <span className="pin-indicator-sub">(Pinned projects appear first on Home & Projects)</span>
+          </div>
         </div>
 
         <button
@@ -467,7 +532,7 @@ export default function AdminProjects() {
           filteredProjects.map((p) => {
             const projId = p._id || p.slug || p.id;
             return (
-              <div key={projId} className="project-admin-card">
+              <div key={projId} className={`project-admin-card ${p.isPinned ? 'card-pinned' : ''}`}>
                 <div className="project-thumbnail-wrap">
                   <img
                     src={p.img || '/assets/projects-preview.png'}
@@ -478,6 +543,11 @@ export default function AdminProjects() {
                   />
                   <span className="project-category-badge">{p.category || 'Full Stack'}</span>
                   <span className="project-status-tag">{p.status || 'Live'}</span>
+                  {p.isPinned && (
+                    <span className="project-pinned-tag">
+                      📌 Pinned to Top
+                    </span>
+                  )}
                 </div>
 
                 <div className="project-admin-card-body">
@@ -530,6 +600,15 @@ export default function AdminProjects() {
                     </div>
 
                     <div className="card-actions-btn-group">
+                      <button
+                        type="button"
+                        className={`btn-card-pin ${p.isPinned ? 'is-pinned' : ''}`}
+                        onClick={() => handleTogglePin(p)}
+                        title={p.isPinned ? 'Unpin this project' : 'Pin to top (Max 6)'}
+                      >
+                        <span className="pin-icon-inline">📌</span>
+                        <span>{p.isPinned ? 'Pinned' : 'Pin'}</span>
+                      </button>
                       <button
                         type="button"
                         className="btn-card-edit"
@@ -616,6 +695,32 @@ export default function AdminProjects() {
               {/* TAB 1: BASIC INFO */}
               {activeTab === 'basic' && (
                 <div className="tab-pane-content">
+                  {/* Pin to Top Feature (Max 6) */}
+                  <div className="pin-toggle-card">
+                    <label className="pin-toggle-label">
+                      <input
+                        type="checkbox"
+                        checked={Boolean(formData.isPinned)}
+                        onChange={(e) => {
+                          if (
+                            e.target.checked &&
+                            pinnedCount >= 6 &&
+                            (!isEditing || !projects.find((p) => (p._id === editId || p.slug === editId || p.id === editId))?.isPinned)
+                          ) {
+                            alert('Maximum 6 projects can be pinned to top! Please unpin another project first.');
+                            return;
+                          }
+                          setFormData((prev) => ({ ...prev, isPinned: e.target.checked }));
+                        }}
+                      />
+                      <span className="pin-custom-check">📌</span>
+                      <div className="pin-toggle-text">
+                        <strong>Pin this project to Top (Max 6)</strong>
+                        <span>Pinned projects are prioritized at the top of the Projects page and Home Featured Projects. (Currently {pinnedCount}/6 pinned)</span>
+                      </div>
+                    </label>
+                  </div>
+
                   <div className="form-group">
                     <label>
                       Project Title <span className="req">*</span>

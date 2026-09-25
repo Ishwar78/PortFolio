@@ -202,6 +202,66 @@ export default function BlogDetail() {
       });
   }, [slug]);
 
+  // Dynamic SEO Meta Tags injection + Console Output
+  useEffect(() => {
+    if (!blog) return;
+
+    const seoTitle = blog.metaTitle || blog.title || 'Tech Blog Article';
+    const seoDesc = blog.metaDescription || blog.excerpt || '';
+    const seoKeywords = blog.metaKeywords || (Array.isArray(blog.tags) ? blog.tags.join(', ') : blog.tags || '');
+    const seoImg = blog.image || '/assets/projects-preview.png';
+    const pageUrl = typeof window !== 'undefined' ? window.location.href : `https://ishwarweb.in/blog/${blog.slug}`;
+
+    // 1. Update Document Title
+    document.title = `${seoTitle} | Ishwar Sharma`;
+
+    // Helper to safely set meta tag
+    const setMeta = (attr, key, val) => {
+      if (!val) return;
+      let el = document.querySelector(`meta[${attr}="${key}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, key);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', val);
+    };
+
+    // 2. Set Standard Meta Tags
+    setMeta('name', 'title', seoTitle);
+    setMeta('name', 'description', seoDesc);
+    setMeta('name', 'keywords', seoKeywords);
+    setMeta('name', 'author', blog.author?.name || 'Ishwar Sharma');
+
+    // 3. Set OpenGraph Meta Tags
+    setMeta('property', 'og:title', seoTitle);
+    setMeta('property', 'og:description', seoDesc);
+    setMeta('property', 'og:image', seoImg);
+    setMeta('property', 'og:url', pageUrl);
+    setMeta('property', 'og:type', 'article');
+
+    // 4. Set Twitter Card Meta Tags
+    setMeta('name', 'twitter:title', seoTitle);
+    setMeta('name', 'twitter:description', seoDesc);
+    setMeta('name', 'twitter:image', seoImg);
+
+    // 5. Console Output (User explicit requirement)
+    console.log(
+      '%c🔍 [SEO & META TAGS LOADED FOR ARTICLE]',
+      'background: #0284c7; color: #ffffff; font-weight: bold; padding: 4px 10px; border-radius: 4px; font-size: 13px;'
+    );
+    console.log('%c📌 Title: %c' + seoTitle, 'font-weight: bold; color: #38bdf8;', 'color: #f1f5f9;');
+    console.log('%c📝 Description: %c' + seoDesc, 'font-weight: bold; color: #38bdf8;', 'color: #cbd5e1;');
+    console.log('%c🏷️ Keywords: %c' + seoKeywords, 'font-weight: bold; color: #38bdf8;', 'color: #fde68a;');
+    console.table({
+      'SEO Meta Title': seoTitle,
+      'SEO Meta Description': seoDesc,
+      'SEO Meta Keywords': seoKeywords,
+      'Article URL': pageUrl,
+      'Category': blog.category || 'Development',
+    });
+  }, [blog]);
+
   if (!blog) {
     return (
       <main className="blog-detail-page">

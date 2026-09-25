@@ -77,6 +77,14 @@ const projectSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    isPinned: {
+      type: Boolean,
+      default: false,
+    },
+    pinOrder: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

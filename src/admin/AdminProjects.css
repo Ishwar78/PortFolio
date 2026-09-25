@@ -641,3 +641,321 @@
   color: #32587a;
   margin-bottom: 12px;
 }
+
+/* =========================================================
+   PINNED FEATURE STYLING
+========================================================= */
+
+.pinned-count-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 6px 14px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 20px;
+  font-size: 12px;
+  color: #fde68a;
+}
+
+.pin-indicator-icon {
+  font-size: 14px;
+}
+
+.pin-indicator-sub {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.card-pinned {
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.15) !important;
+}
+
+.project-pinned-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  background: rgba(245, 158, 11, 0.95);
+  color: #030a14;
+  font-size: 10.5px;
+  font-weight: 800;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4);
+  z-index: 2;
+}
+
+.btn-card-pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-card-pin:hover {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #fde68a;
+}
+
+.btn-card-pin.is-pinned {
+  background: rgba(245, 158, 11, 0.22);
+  border-color: rgba(245, 158, 11, 0.55);
+  color: #fde68a;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+}
+
+/* Modal Pin Toggle Card */
+.pin-toggle-card {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+
+.pin-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pin-toggle-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #f59e0b;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.pin-custom-check {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.pin-toggle-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pin-toggle-text strong {
+  font-size: 13px;
+  color: #fef08a;
+}
+
+.pin-toggle-text span {
+  font-size: 11.5px;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   COMPREHENSIVE MOBILE RESPONSIVENESS (< 768px & < 480px)
+========================================================= */
+
+@media (max-width: 768px) {
+  .projects-admin-page {
+    padding: 4px 0 60px;
+  }
+
+  .admin-header-box {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px 16px;
+  }
+
+  .admin-header-box .admin-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .projects-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .filter-pills {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filter-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-pill {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .toolbar-search {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .projects-admin-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .project-thumbnail-wrap {
+    height: 160px;
+  }
+
+  .project-admin-card-body {
+    padding: 16px 14px;
+  }
+
+  .project-admin-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .card-external-links {
+    justify-content: flex-start;
+  }
+
+  .card-actions-btn-group {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .card-actions-btn-group .btn-card-pin,
+  .card-actions-btn-group .btn-card-edit {
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* Modal Mobile Responsiveness */
+  .admin-modal-overlay {
+    padding: 8px;
+    align-items: flex-end;
+  }
+
+  .admin-modal-box.modal-wide {
+    width: 100%;
+    max-height: 94vh;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .modal-header {
+    padding: 14px 16px;
+  }
+
+  .modal-title-wrap h2 {
+    font-size: 15px;
+  }
+
+  .modal-title-wrap span {
+    font-size: 11px;
+  }
+
+  .modal-nav-tabs {
+    padding: 0 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .modal-nav-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .modal-tab {
+    padding: 10px 12px;
+    font-size: 11.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .tab-pane-content {
+    padding: 14px 12px;
+    gap: 14px;
+  }
+
+  .form-row-dual,
+  .form-row-three {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .dynamic-feature-row {
+    grid-template-columns: 1fr 38px;
+    grid-template-areas:
+      "title del"
+      "desc  desc";
+    gap: 8px;
+  }
+
+  .dynamic-feature-row input:first-child {
+    grid-area: title;
+  }
+
+  .dynamic-feature-row input:nth-child(2) {
+    grid-area: desc;
+  }
+
+  .dynamic-feature-row button {
+    grid-area: del;
+  }
+
+  .upload-controls-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .image-preview-box {
+    width: 100%;
+    max-width: 100%;
+    height: 140px;
+  }
+
+  .gallery-thumbnails-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+  }
+
+  .modal-footer-actions {
+    padding: 12px 14px;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modal-footer-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .pinned-count-indicator {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    border-radius: 10px;
+  }
+}
+

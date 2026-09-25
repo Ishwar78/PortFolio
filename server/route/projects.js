@@ -195,10 +195,10 @@ const defaultProjects = [
   },
 ];
 
-// GET /api/projects - Get all projects
+// GET /api/projects - Get all projects (pinned projects first)
 router.get('/', async (req, res) => {
   try {
-    let projects = await Project.find().sort({ createdAt: -1 });
+    let projects = await Project.find().sort({ isPinned: -1, pinOrder: 1, createdAt: -1 });
 
     // Seed default if empty
     if (projects.length === 0) {
@@ -209,6 +209,54 @@ router.get('/', async (req, res) => {
   } catch (error) {
     console.error('Error fetching projects:', error);
     return res.json(defaultProjects);
+  }
+});
+
+// PATCH /api/projects/:id/pin - Quick toggle pinned state (Max 6 limit)
+router.patch('/:id/pin', async (req, res) => {
+  try {
+    const { id } = req.params;
+    let project = null;
+
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      project = await Project.findById(id);
+    } else {
+      project = await Project.findOne({
+        $or: [{ slug: id }, { title: new RegExp(`^${id}$`, 'i') }],
+      });
+    }
+
+    if (!project) {
+      return res.status(404).json({ success: false, message: 'Project not found.' });
+    }
+
+    const nextPinState = !project.isPinned;
+
+    if (nextPinState) {
+      const pinnedCount = await Project.countDocuments({ isPinned: true });
+      if (pinnedCount >= 6) {
+        return res.status(400).json({
+          success: false,
+          message: 'Maximum 6 projects can be pinned to top! Please unpin another project first.',
+        });
+      }
+    }
+
+    project.isPinned = nextPinState;
+    if (nextPinState) {
+      project.pinOrder = Date.now();
+    }
+    await project.save();
+
+    return res.json({
+      success: true,
+      isPinned: project.isPinned,
+      project,
+      message: project.isPinned ? 'Project pinned to top!' : 'Project unpinned successfully.',
+    });
+  } catch (error) {
+    console.error('Error toggling project pin:', error);
+    return res.status(500).json({ success: false, message: 'Failed to toggle project pin.' });
   }
 });
 
@@ -262,6 +310,15 @@ router.get('/:id', async (req, res) => {
 // POST /api/projects - Add a new project
 router.post('/', async (req, res) => {
   try {
+    if (req.body.isPinned) {
+      const pinnedCount = await Project.countDocuments({ isPinned: true });
+      if (pinnedCount >= 6) {
+        return res.status(400).json({
+          success: false,
+          message: 'Maximum 6 projects can be pinned to top! Please unpin another project first.',
+        });
+      }
+    }
     const newProject = new Project(req.body);
     await newProject.save();
     return res.status(201).json({ success: true, project: newProject });
@@ -273,6 +330,19 @@ router.post('/', async (req, res) => {
 // PUT /api/projects/:id - Update project
 router.put('/:id', async (req, res) => {
   try {
+    if (req.body.isPinned) {
+      const existing = await Project.findById(req.params.id);
+      if (!existing || !existing.isPinned) {
+        const pinnedCount = await Project.countDocuments({ isPinned: true });
+        if (pinnedCount >= 6) {
+          return res.status(400).json({
+            success: false,
+            message: 'Maximum 6 projects can be pinned to top! Please unpin another project first.',
+          });
+        }
+      }
+    }
+
     let updated = null;
     if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
       updated = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
