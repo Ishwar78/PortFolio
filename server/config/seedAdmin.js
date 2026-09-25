@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const seedAdmin = async () => {
   try {
-    const adminEmail = 'Ishwarweb';
+    const adminEmail = 'ishwarweb@admin.com';
     const plainPassword = 'Admin';
 
     const existingAdmin = await Admin.findOne({ email: adminEmail.toLowerCase() });

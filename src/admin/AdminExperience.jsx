@@ -35,9 +35,9 @@ const defaultExperienceData = {
     image: '/assets/experience-preview.png',
   },
   stats: {
-    stat1Value: '3+',
+    stat1Value: '2+',
     stat1Label: 'Years Experience',
-    stat2Value: '10+',
+    stat2Value: '15+',
     stat2Label: 'Projects Completed',
     stat3Value: '4+',
     stat3Label: 'Companies/Clients',
@@ -49,27 +49,55 @@ const defaultExperienceData = {
     heading: 'Work Experience Timeline',
     items: [
       {
-        role: 'Technical Supervisor',
-        company: 'Wipro (On-Site)',
-        period: 'Mar 2024 – Present',
-        location: 'Gurugram, Haryana',
-        type: 'Full-time',
-        description:
-          'Handling technical operations and team support at client site. Working on system maintenance, troubleshooting and user support.',
-        technologies: ['Technical Operations', 'Troubleshooting', 'System Support'],
-        image: '',
-      },
+            role: 'Full Stack Developer',
+
+            company: 'Webmok Pvt. Ltd.',
+
+            period: 'Feb 2026 – Present',
+
+            location: 'Rohtak, Haryana',
+
+            type: 'Full-time',
+
+            description:
+              'Developing and maintaining full-stack web applications using modern frontend and backend technologies. Working on responsive user interfaces, REST APIs, database integration, authentication, third-party API integrations and deployment while troubleshooting and improving application performance.',
+
+            technologies: [
+              'React',
+              'Node.js',
+              'REST APIs',
+              'MongoDB',
+              'API Integration',
+              'Deployment',
+            ],
+
+            image: '',
+          },
       {
-        role: 'HVAC Plant Operations',
-        company: 'DLF Corporate Greens, Gurugram',
-        period: 'Mar 2022 – Mar 2024',
-        location: 'Gurugram, Haryana',
-        type: 'Full-time',
-        description:
-          'Worked in HVAC plant operations and technical systems, managing maintenance and day-to-day operations.',
-        technologies: ['Plant Operations', 'Maintenance', 'Diagnostics'],
-        image: '',
-      },
+            role: 'Full Stack Developer',
+
+            company: 'Satya Web Technology, Rohtak',
+
+            period: 'Mar 2025 – Jan 2026',
+
+            location: 'Rohtak, Haryana',
+
+            type: 'Full-time',
+
+            description:
+              'Worked on full-stack web development, building responsive frontend interfaces and backend functionality. Developed and integrated APIs, worked with databases, implemented application features and supported testing, debugging and deployment of web applications.',
+
+            technologies: [
+              'React',
+              'JavaScript',
+              'Node.js',
+              'REST APIs',
+              'Database',
+              'Git',
+            ],
+
+            image: '',
+          },
       {
         role: 'Full Stack Developer (Intern)',
         company: 'AAM Infotech Pvt. Ltd., Gurugram',
