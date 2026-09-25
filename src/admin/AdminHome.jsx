@@ -72,6 +72,9 @@ export default function AdminHome() {
     return cached ? JSON.parse(cached) : defaultHomeData;
   });
 
+  const [homeSkills, setHomeSkills] = useState([]);
+  const [newSkill, setNewSkill] = useState({ name: '', icon: 'FiCode', level: 'Advanced', order: 0 });
+
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState('');
   const heroFileInputRef = useRef(null);
@@ -88,7 +91,40 @@ export default function AdminHome() {
         }
       })
       .catch(() => {});
+
+    fetchHomeSkills();
   }, []);
+
+  const fetchHomeSkills = () => {
+    portfolioApi.getHomeSkills()
+      .then((data) => setHomeSkills(data))
+      .catch((err) => console.error('Failed to fetch home skills:', err));
+  };
+
+  const handleAddSkill = async () => {
+    if (!newSkill.name.trim()) return;
+    try {
+      await portfolioApi.createHomeSkill(newSkill);
+      setToast('Skill added successfully!');
+      setNewSkill({ name: '', icon: 'FiCode', level: 'Advanced', order: 0 });
+      fetchHomeSkills();
+    } catch (err) {
+      setToast('Failed to add skill.');
+    }
+    setTimeout(() => setToast(''), 3000);
+  };
+
+  const handleDeleteSkill = async (id) => {
+    if (!window.confirm('Delete this skill?')) return;
+    try {
+      await portfolioApi.deleteHomeSkill(id);
+      setToast('Skill deleted!');
+      fetchHomeSkills();
+    } catch (err) {
+      setToast('Failed to delete skill.');
+    }
+    setTimeout(() => setToast(''), 3000);
+  };
 
   // Save to MongoDB & localStorage
   const handleSave = async () => {
@@ -251,6 +287,15 @@ export default function AdminHome() {
         >
           <FiUser />
           <span>2. Home About Me Section</span>
+        </button>
+
+        <button
+          type="button"
+          className={`section-tab-btn ${activeTab === 'skills' ? 'active' : ''}`}
+          onClick={() => setActiveTab('skills')}
+        >
+          <FiLayers />
+          <span>3. Home Skills Section</span>
         </button>
       </div>
 
@@ -1061,6 +1106,98 @@ export default function AdminHome() {
                 <small style={{ color: '#70baff', letterSpacing: '2px' }}>
                   {data.homeAbout.captions}
                 </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================
+          TAB 3: HOME SKILLS SECTION
+      ========================================================== */}
+      {activeTab === 'skills' && (
+        <div className="home-admin-layout">
+          <div className="admin-card-box home-form-panel">
+            <div className="panel-title">
+              <FiLayers className="panel-title-icon" />
+              <h2>Manage Home Page Skills</h2>
+            </div>
+
+            <div className="two-col-inputs">
+              <div className="admin-input-group">
+                <label>Skill Name</label>
+                <input
+                  type="text"
+                  className="admin-input"
+                  value={newSkill.name}
+                  onChange={(e) => setNewSkill({ ...newSkill, name: e.target.value })}
+                  placeholder="e.g. React"
+                />
+              </div>
+              <div className="admin-input-group">
+                <label>Icon Class (e.g. FiCode, FiServer)</label>
+                <input
+                  type="text"
+                  className="admin-input"
+                  value={newSkill.icon}
+                  onChange={(e) => setNewSkill({ ...newSkill, icon: e.target.value })}
+                  placeholder="FiCode"
+                />
+              </div>
+            </div>
+            
+            <div className="two-col-inputs">
+              <div className="admin-input-group">
+                <label>Level</label>
+                <input
+                  type="text"
+                  className="admin-input"
+                  value={newSkill.level}
+                  onChange={(e) => setNewSkill({ ...newSkill, level: e.target.value })}
+                  placeholder="e.g. Advanced"
+                />
+              </div>
+              <div className="admin-input-group">
+                <label>Order</label>
+                <input
+                  type="number"
+                  className="admin-input"
+                  value={newSkill.order}
+                  onChange={(e) => setNewSkill({ ...newSkill, order: parseInt(e.target.value) || 0 })}
+                  placeholder="0"
+                />
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="admin-btn admin-btn-primary"
+              onClick={handleAddSkill}
+              style={{ marginTop: '16px' }}
+            >
+              <FiPlus /> Add Skill
+            </button>
+            
+            <div className="skills-list" style={{ marginTop: '30px' }}>
+              <h3>Current Home Skills</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
+                {homeSkills.map(skill => (
+                  <div key={skill._id} style={{ padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <strong>{skill.name}</strong> ({skill.level})<br/>
+                      <small style={{ color: '#aaa' }}>{skill.icon} • Order: {skill.order}</small>
+                    </div>
+                    <button
+                      type="button"
+                      className="admin-btn admin-btn-danger"
+                      style={{ padding: '8px' }}
+                      onClick={() => handleDeleteSkill(skill._id)}
+                    >
+                      <FiTrash2 />
+                    </button>
+                  </div>
+                ))}
+                {homeSkills.length === 0 && <p style={{ color: '#888' }}>No skills added yet.</p>}
               </div>
             </div>
           </div>

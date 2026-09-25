@@ -102,6 +102,7 @@ app.use('/api/skills', skillsRouter);
 app.use('/api/experience', experienceRouter);
 app.use('/api/chatbot', chatbotRouter);
 app.use('/api/blogs', blogsRouter);
+app.use('/api/homeskills', require('./route/homeSkills'));
 
 // =====================================================
 // DYNAMIC SEO META TAG INJECTOR FOR BLOGS & WEB PAGES

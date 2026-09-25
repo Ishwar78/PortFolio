@@ -71,20 +71,26 @@ const defaultHomeContent = {
 };
 
 
-const skills = [
-  { name: "Java", icon: FiCode, level: "Advanced" },
-  { name: "Spring Boot", icon: FiServer, level: "Advanced" },
-  { name: "React", icon: FiMonitor, level: "Advanced" },
-  { name: "Node.js", icon: FiServer, level: "Advanced" },
-  { name: "JavaScript", icon: FiCode, level: "Advanced" },
-  { name: "HTML5", icon: FiCode, level: "Advanced" },
-  { name: "CSS3", icon: FiCode, level: "Advanced" },
-  { name: "MySQL", icon: FiDatabase, level: "Advanced" },
-  { name: "MongoDB", icon: FiDatabase, level: "Intermediate" },
-  { name: "Git", icon: FiCode, level: "Advanced" },
-  { name: "GitHub", icon: FiGithub, level: "Advanced" },
-  { name: "AWS", icon: FiServer, level: "Intermediate" },
+const defaultSkills = [
+  { name: "Java", icon: "FiCode", level: "Advanced" },
+  { name: "Spring Boot", icon: "FiServer", level: "Advanced" },
+  { name: "React", icon: "FiMonitor", level: "Advanced" },
+  { name: "Node.js", icon: "FiServer", level: "Advanced" },
+  { name: "JavaScript", icon: "FiCode", level: "Advanced" },
+  { name: "HTML5", icon: "FiCode", level: "Advanced" },
+  { name: "CSS3", icon: "FiCode", level: "Advanced" },
+  { name: "MySQL", icon: "FiDatabase", level: "Advanced" },
+  { name: "MongoDB", icon: "FiDatabase", level: "Intermediate" },
+  { name: "Git", icon: "FiCode", level: "Advanced" },
+  { name: "GitHub", icon: "FiGithub", level: "Advanced" },
+  { name: "AWS", icon: "FiServer", level: "Intermediate" },
 ];
+
+const IconMap = {
+  FiArrowRight, FiMail, FiGithub, FiLinkedin, FiTwitter, FiMapPin,
+  FiBookOpen, FiCode, FiExternalLink, FiCheckCircle, FiLayers, FiZap,
+  FiDownload, FiDatabase, FiServer, FiMonitor
+};
 
 const projects = [
   {
@@ -121,6 +127,7 @@ export default function Home() {
   });
 
   const [homeProjects, setHomeProjects] = useState(projects);
+  const [homeSkills, setHomeSkills] = useState(defaultSkills);
 
   useEffect(() => {
     portfolioApi
@@ -143,6 +150,15 @@ export default function Home() {
           // Show up to 6 pinned projects or 3 default
           const countToShow = Math.min(6, Math.max(3, pinnedList.length));
           setHomeProjects(sorted.slice(0, countToShow));
+        }
+      })
+      .catch(() => {});
+
+    portfolioApi
+      .getHomeSkills()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setHomeSkills(data);
         }
       })
       .catch(() => {});
@@ -548,9 +564,9 @@ export default function Home() {
 
         <div className="skill-grid">
 
-          {skills.map((skill, index) => {
+          {homeSkills.map((skill, index) => {
 
-            const Icon = skill.icon;
+            const Icon = IconMap[skill.icon] || FiCode;
 
             return (
               <div

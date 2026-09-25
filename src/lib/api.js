@@ -122,6 +122,26 @@ export const portfolioApi = {
       body: JSON.stringify(data),
     }),
 
+  // Home Page Skills
+  getHomeSkills: () => apiRequest('/homeskills'),
+
+  createHomeSkill: (payload) =>
+    apiRequest('/homeskills', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  updateHomeSkill: (id, payload) =>
+    apiRequest(`/homeskills/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
+
+  deleteHomeSkill: (id) =>
+    apiRequest(`/homeskills/${id}`, {
+      method: 'DELETE',
+    }),
+
   // Dedicated Experience Page Content
   getExperience: () => apiRequest('/experience'),
 
