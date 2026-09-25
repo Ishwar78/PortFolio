@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useMemo, useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import {
   FiArrowRight,
@@ -8,11 +8,13 @@ import {
   FiGithub,
 } from 'react-icons/fi';
 
+import { portfolioApi } from '../lib/api';
 import CTA from '../components/CTA';
 import './Projects.css';
 
 
 export default function Projects() {
+  const navigate = useNavigate();
 
   const [filter, setFilter] = useState('All Projects');
 
@@ -36,12 +38,14 @@ export default function Projects() {
 
       tags: [
         'React',
-        'Node.js',
-        'MongoDB',
+        'Spring Boot',
+        'MySQL',
         'Activity Monitoring',
       ],
 
       cat: 'Full Stack',
+      liveUrl: 'https://multiclout.in/',
+      githubUrl: 'https://github.com/Ishwar78',
     },
 
 
@@ -67,6 +71,8 @@ export default function Projects() {
       ],
 
       cat: 'Web Apps',
+      liveUrl: 'https://thekissancity.com/',
+      githubUrl: 'https://github.com/Ishwar78',
     },
 
 
@@ -92,6 +98,8 @@ export default function Projects() {
       ],
 
       cat: 'Full Stack',
+      liveUrl: 'https://uni10.in/',
+      githubUrl: 'https://github.com/Ishwar78',
     },
 
 
@@ -116,6 +124,8 @@ export default function Projects() {
       ],
 
       cat: 'React',
+      liveUrl: 'https://www.skillserveacademy.in/',
+      githubUrl: 'https://github.com/Ishwar78',
     },
 
 
@@ -141,6 +151,8 @@ export default function Projects() {
       ],
 
       cat: 'Web Apps',
+      liveUrl: 'https://skclasses.com/',
+      githubUrl: 'https://github.com/Ishwar78',
     },
 
 
@@ -166,9 +178,36 @@ export default function Projects() {
       ],
 
       cat: 'React',
+      liveUrl: 'https://ishwarweb.in/',
+      githubUrl: 'https://github.com/Ishwar78/PortFolio',
     },
   ];
 
+  const [projectList, setProjectList] = useState(projects);
+
+  useEffect(() => {
+    portfolioApi
+      .getProjects()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProjectList(
+            data.map((p) => ({
+              id: p.slug || p._id || p.id,
+              title: p.title,
+              desc: p.desc,
+              img: p.img || '/assets/projects-preview.png',
+              tags: Array.isArray(p.tags) ? p.tags : [],
+              cat: p.category || 'Full Stack',
+              liveUrl: p.liveUrl || '',
+              githubUrl: p.githubUrl || 'https://github.com/Ishwar78',
+            }))
+          );
+        }
+      })
+      .catch((err) => {
+        console.warn('Using local projects fallback:', err);
+      });
+  }, []);
 
   /* =====================================================
      FILTER + SEARCH
@@ -176,7 +215,7 @@ export default function Projects() {
 
   const filtered = useMemo(() => {
 
-    return projects.filter((p) => {
+    return projectList.filter((p) => {
 
       const matchesFilter =
         filter === 'All Projects' ||
@@ -387,6 +426,8 @@ export default function Projects() {
 
               <article
                 key={p.id}
+                onClick={() => navigate(`/projects/${p.id}`)}
+                style={{ cursor: 'pointer' }}
               >
 
 
@@ -453,22 +494,32 @@ export default function Projects() {
 
                 <div className="card-actions">
 
-
-                  <Link
-                    to={`/projects/${p.id}`}
-                  >
-
-                    Live Demo
-
-                    <FiArrowRight />
-
-                  </Link>
+                  {p.liveUrl ? (
+                    <a
+                      href={p.liveUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Live Demo
+                      <FiExternalLink />
+                    </a>
+                  ) : (
+                    <Link
+                      to={`/projects/${p.id}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Live Demo
+                      <FiArrowRight />
+                    </Link>
+                  )}
 
 
                   <a
-                    href="https://github.com/"
+                    href={p.githubUrl || 'https://github.com/Ishwar78'}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
                   >
 
                     <FiGithub />

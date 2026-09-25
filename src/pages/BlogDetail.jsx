@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   FiArrowLeft,
@@ -6,8 +6,10 @@ import {
   FiClock,
   FiTag,
   FiArrowRight,
+  FiArrowUpRight,
   FiShare2,
 } from "react-icons/fi";
+import { portfolioApi } from "../lib/api";
 import "./BlogDetail.css";
 
 const blogs = [
@@ -173,9 +175,32 @@ const slugify = (text) =>
 export default function BlogDetail() {
   const { slug } = useParams();
 
-  const blog = blogs.find(
-    (item) => item.slug === slug || slugify(item.title) === slug
-  );
+  const [blog, setBlog] = useState(() => {
+    return (
+      blogs.find((item) => item.slug === slug || slugify(item.title) === slug || String(item.id) === String(slug)) ||
+      blogs[0]
+    );
+  });
+
+  useEffect(() => {
+    const localMatch = blogs.find(
+      (item) => item.slug === slug || slugify(item.title) === slug || String(item.id) === String(slug)
+    );
+    if (localMatch) {
+      setBlog(localMatch);
+    }
+
+    portfolioApi
+      .getBlogBySlug(slug)
+      .then((res) => {
+        if (res && res.blog) {
+          setBlog(res.blog);
+        }
+      })
+      .catch((err) => {
+        console.warn('Using local fallback for blog detail:', err);
+      });
+  }, [slug]);
 
   if (!blog) {
     return (
@@ -197,7 +222,7 @@ export default function BlogDetail() {
   }
 
   const relatedBlogs = blogs
-    .filter((item) => item.id !== blog.id)
+    .filter((item) => item.id !== blog.id && item.slug !== blog.slug)
     .slice(0, 2);
 
   return (
@@ -223,7 +248,7 @@ export default function BlogDetail() {
 
             <span>
               <FiClock />
-              {blog.readTime}
+              {blog.readTime || '5 min read'}
             </span>
           </div>
 
@@ -239,8 +264,8 @@ export default function BlogDetail() {
             </div>
 
             <div>
-              <strong>Ishwar Sharma</strong>
-              <span>Full Stack Developer</span>
+              <strong>{blog.author?.name || 'Ishwar Sharma'}</strong>
+              <span>{blog.author?.role || 'Full Stack Developer'}</span>
             </div>
           </div>
         </div>
@@ -250,8 +275,11 @@ export default function BlogDetail() {
 
         <div className="detail-featured-image">
           <img
-            src={blog.image}
+            src={blog.image || '/assets/projects-preview.png'}
             alt={blog.title}
+            onError={(e) => {
+              e.target.src = '/assets/projects-preview.png';
+            }}
           />
 
           <div className="image-overlay">
@@ -263,13 +291,21 @@ export default function BlogDetail() {
 
           <article className="article-content">
 
-            {blog.content.map((section, index) =>
-              section.type === "heading" ? (
-                <h2 key={index}>{section.text}</h2>
-              ) : (
-                <p key={index}>{section.text}</p>
+            {typeof blog.content === "string" ? (
+              <div
+                className="blog-rich-content"
+                style={{ lineHeight: "1.8", color: "var(--muted)", fontSize: "16px" }}
+                dangerouslySetInnerHTML={{ __html: blog.content }}
+              />
+            ) : Array.isArray(blog.content) ? (
+              blog.content.map((section, index) =>
+                section.type === "heading" ? (
+                  <h2 key={index}>{section.text}</h2>
+                ) : (
+                  <p key={index}>{section.text}</p>
+                )
               )
-            )}
+            ) : null}
 
             <div className="article-tags">
               <FiTag />

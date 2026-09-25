@@ -125,4 +125,75 @@ export const portfolioApi = {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
+
+  // Projects - Single project by slug/id
+  getProjectById: (id) => apiRequest(`/projects/${id}`),
+
+  // Chatbot Q&A Management
+  getChatbotQA: () => apiRequest('/chatbot/qa'),
+
+  createChatbotQA: (payload) =>
+    apiRequest('/chatbot/qa', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  updateChatbotQA: (id, payload) =>
+    apiRequest(`/chatbot/qa/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
+
+  deleteChatbotQA: (id) =>
+    apiRequest(`/chatbot/qa/${id}`, {
+      method: 'DELETE',
+    }),
+
+  queryChatbot: (message) =>
+    apiRequest('/chatbot/query', {
+      method: 'POST',
+      body: JSON.stringify({ message }),
+    }),
+
+  // Chatbot Visitor Leads / Inquiries
+  sendChatbotLead: (payload) =>
+    apiRequest('/chatbot/lead', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  getChatbotLeads: () => apiRequest('/chatbot/leads'),
+
+  updateChatbotLeadStatus: (id, status) =>
+    apiRequest(`/chatbot/leads/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    }),
+
+  deleteChatbotLead: (id) =>
+    apiRequest(`/chatbot/leads/${id}`, {
+      method: 'DELETE',
+    }),
+
+  // Blogs Management
+  getBlogs: () => apiRequest('/blogs'),
+
+  getBlogBySlug: (slug) => apiRequest(`/blogs/${slug}`),
+
+  createBlog: (payload) =>
+    apiRequest('/blogs', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  updateBlog: (id, payload) =>
+    apiRequest(`/blogs/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
+
+  deleteBlog: (id) =>
+    apiRequest(`/blogs/${id}`, {
+      method: 'DELETE',
+    }),
 };

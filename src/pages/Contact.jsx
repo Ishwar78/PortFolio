@@ -30,7 +30,7 @@ export default function Contact() {
   const [submitting, setSubmitting] = useState(false);
 
   const defaultContact = {
-    email: "ishwarweb@gmail.com",
+    email: "sharmaishwar970@gmail.com",
     phone: "Available on request",
     location: "Rohtak, Haryana, India",
     city: "Rohtak, Haryana",
@@ -39,7 +39,7 @@ export default function Contact() {
     availability: "Let's Build Something Amazing Together",
     intro:
       "I'm always open to discussing new projects, creative ideas, development opportunities, collaborations, or simply having a friendly conversation about technology.",
-    github: "https://github.com/",
+    github: "https://github.com/Ishwar78",
     linkedin: "https://linkedin.com/",
     twitter: "https://twitter.com/",
     instagram: "https://instagram.com/",

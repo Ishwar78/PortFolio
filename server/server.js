@@ -14,8 +14,12 @@ const aboutRouter = require('./route/about');
 const contactRouter = require('./route/contact');
 const skillsRouter = require('./route/skills');
 const experienceRouter = require('./route/experience');
+const chatbotRouter = require('./route/chatbot');
+const blogsRouter = require('./route/blogs');
 const Inquiry = require('./module/Inquiry');
 const Project = require('./module/Project');
+const ChatbotLead = require('./module/ChatbotLead');
+const Blog = require('./module/Blog');
 
 const app = express();
 const PORT = process.env.PORT || 6095;
@@ -43,11 +47,15 @@ app.get('/api/health', (req, res) => {
 // Admin Stats Endpoint
 app.get('/api/admin/stats', async (req, res) => {
   try {
-    const [totalInquiries, unreadInquiries, totalProjects] = await Promise.all([
-      Inquiry.countDocuments(),
-      Inquiry.countDocuments({ status: 'unread' }),
-      Project.countDocuments(),
-    ]);
+    const [totalInquiries, unreadInquiries, totalProjects, totalBotLeads, newBotLeads, totalBlogs] =
+      await Promise.all([
+        Inquiry.countDocuments(),
+        Inquiry.countDocuments({ status: 'unread' }),
+        Project.countDocuments(),
+        ChatbotLead.countDocuments(),
+        ChatbotLead.countDocuments({ status: 'new' }),
+        Blog.countDocuments(),
+      ]);
 
     res.json({
       success: true,
@@ -57,6 +65,9 @@ app.get('/api/admin/stats', async (req, res) => {
         totalProjects: totalProjects || 6,
         totalSkills: 12,
         totalExperience: 3,
+        totalBotLeads,
+        newBotLeads,
+        totalBlogs: totalBlogs || 3,
         dbStatus: 'Connected',
       },
     });
@@ -69,6 +80,9 @@ app.get('/api/admin/stats', async (req, res) => {
         totalProjects: 6,
         totalSkills: 12,
         totalExperience: 3,
+        totalBotLeads: 0,
+        newBotLeads: 0,
+        totalBlogs: 3,
         dbStatus: 'Fallback',
       },
     });
@@ -85,6 +99,8 @@ app.use('/api/about', aboutRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/skills', skillsRouter);
 app.use('/api/experience', experienceRouter);
+app.use('/api/chatbot', chatbotRouter);
+app.use('/api/blogs', blogsRouter);
 
 // 404 Route handler
 app.use((req, res) => {

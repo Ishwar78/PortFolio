@@ -122,7 +122,7 @@
 
   color: #dce8f4;
 
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 600;
 
   text-decoration: none;
@@ -367,7 +367,7 @@
   }
 
   .nav-links a {
-    font-size: 11px;
+    font-size: 14px;
   }
 
   /* Hide social icons to create more space */
@@ -402,7 +402,7 @@
   }
 
   .nav-links a {
-    font-size: 10.5px;
+    font-size: 13px;
   }
 
   .resume-btn {

@@ -22,6 +22,9 @@ import AdminProjects from './admin/AdminProjects';
 import AdminExperience from './admin/AdminExperience';
 import AdminContact from './admin/AdminContact';
 import AdminInquiry from './admin/AdminInquiry';
+import AdminChatbotQA from './admin/AdminChatbotQA';
+import AdminBotLeads from './admin/AdminBotLeads';
+import AdminBlog from './admin/AdminBlog';
 import Blog from './pages/Blog'
 import BlogDetail from './pages/BlogDetail';
 
@@ -117,6 +120,21 @@ export default function App() {
           <Route
             path="contact"
             element={<AdminContact />}
+          />
+
+          <Route
+            path="chatbot"
+            element={<AdminChatbotQA />}
+          />
+
+          <Route
+            path="bot-inquiries"
+            element={<AdminBotLeads />}
+          />
+
+          <Route
+            path="blogs"
+            element={<AdminBlog />}
           />
 
           <Route

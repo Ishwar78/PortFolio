@@ -8,6 +8,9 @@ import {
   FiBriefcase,
   FiMail,
   FiMessageSquare,
+  FiMessageCircle,
+  FiCpu,
+  FiBookOpen,
   FiLogOut,
   FiMenu,
   FiX,
@@ -24,6 +27,7 @@ export default function AdminLayout() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [inquiryCount, setInquiryCount] = useState(0);
+  const [botInquiryCount, setBotInquiryCount] = useState(0);
   const [dbConnected, setDbConnected] = useState(true);
 
   // Auth Protection Check
@@ -37,16 +41,21 @@ export default function AdminLayout() {
   // Fetch quick unread badge count
   useEffect(() => {
     portfolioApi
-      .getInquiries()
+      .getStats()
       .then((res) => {
-        if (res && res.inquiries) {
-          const unread = res.inquiries.filter((x) => x.status === 'unread').length;
-          setInquiryCount(unread);
-          setDbConnected(true);
+        if (res && res.stats) {
+          setInquiryCount(res.stats.unreadInquiries || 0);
+          setBotInquiryCount(res.stats.newBotLeads || 0);
+          setDbConnected(res.stats.dbStatus === 'Connected');
         }
       })
       .catch(() => {
-        // Fallback gracefully
+        // Fallback
+        portfolioApi.getInquiries().then((res) => {
+          if (res && res.inquiries) {
+            setInquiryCount(res.inquiries.filter((x) => x.status === 'unread').length);
+          }
+        }).catch(() => {});
         setDbConnected(true);
       });
   }, [location.pathname]);
@@ -59,6 +68,18 @@ export default function AdminLayout() {
     { to: '/admin/projects', label: 'Projects', icon: FiFolder },
     { to: '/admin/experience', label: 'Experience', icon: FiBriefcase },
     { to: '/admin/contact', label: 'Contact Info', icon: FiMail },
+    { to: '/admin/blogs', label: 'Blog Articles', icon: FiBookOpen },
+    {
+      to: '/admin/chatbot',
+      label: 'Chatbot Q&A',
+      icon: FiCpu,
+    },
+    {
+      to: '/admin/bot-inquiries',
+      label: 'Bot Inquiries',
+      icon: FiMessageCircle,
+      badge: botInquiryCount > 0 ? botInquiryCount : null,
+    },
     {
       to: '/admin/inquiries',
       label: 'Inquiries',
@@ -83,6 +104,9 @@ export default function AdminLayout() {
     if (p.includes('/projects')) return 'Projects Management';
     if (p.includes('/experience')) return 'Experience Management';
     if (p.includes('/contact')) return 'Contact Information';
+    if (p.includes('/blogs')) return 'Blog Articles Management';
+    if (p.includes('/chatbot')) return 'Chatbot Q&A Management';
+    if (p.includes('/bot-inquiries')) return 'Chatbot Visitor Inquiries';
     if (p.includes('/inquiries')) return 'Messages & Inquiries';
     return 'Admin Panel';
   };

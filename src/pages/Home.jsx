@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FiArrowRight,
   FiMail,
@@ -114,10 +114,13 @@ const projects = [
 ];
 
 export default function Home() {
+  const navigate = useNavigate();
   const [content, setContent] = useState(() => {
     const cached = localStorage.getItem('ishwar_home_content');
     return cached ? JSON.parse(cached) : defaultHomeContent;
   });
+
+  const [homeProjects, setHomeProjects] = useState(projects);
 
   useEffect(() => {
     portfolioApi
@@ -126,6 +129,15 @@ export default function Home() {
         if (res && res.data && res.data.hero) {
           setContent(res.data);
           localStorage.setItem('ishwar_home_content', JSON.stringify(res.data));
+        }
+      })
+      .catch(() => {});
+
+    portfolioApi
+      .getProjects()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setHomeProjects(data.slice(0, 3));
         }
       })
       .catch(() => {});
@@ -602,60 +614,75 @@ export default function Home() {
 
         <div className="project-grid">
 
-          {projects.map((project) => (
+          {homeProjects.map((project, index) => {
+            const projectLink = `/projects/${project.slug || project._id || project.id || 'teamtrack'}`;
+            const projImg = project.img || project.image || '/assets/projects-preview.png';
+            const projDesc = project.desc || project.description || '';
+            const projTags = Array.isArray(project.tags)
+              ? project.tags
+              : Array.isArray(project.tech)
+              ? project.tech
+              : ['React', 'Node.js'];
 
-            <article
-              className="project-card"
-              key={project.title}
-            >
+            return (
+              <article
+                className="project-card"
+                key={project._id || project.slug || project.title || index}
+                onClick={() => navigate(projectLink)}
+                style={{ cursor: 'pointer' }}
+              >
 
-              <div className="project-image">
+                <div className="project-image">
 
-                <img
-                  src={project.image}
-                  alt={project.title}
-                />
+                  <img
+                    src={projImg}
+                    alt={project.title}
+                    onError={(e) => {
+                      e.target.src = '/assets/projects-preview.png';
+                    }}
+                  />
 
-                <div className="project-overlay"></div>
+                  <div className="project-overlay"></div>
 
-                <span className="project-number">
-                  {project.number}
-                </span>
+                  <span className="project-number">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
 
-                <span className="project-featured">
-                  FEATURED
-                </span>
+                  <span className="project-featured">
+                    FEATURED
+                  </span>
 
-                <Link
-                  to="/projects"
-                  className="project-open"
-                >
-                  <FiExternalLink />
-                </Link>
-
-              </div>
-
-              <div className="project-body">
-
-                <h3>{project.title}</h3>
-
-                <p>{project.description}</p>
-
-                <div className="project-tech">
-
-                  {project.tech.map((technology) => (
-                    <span key={technology}>
-                      {technology}
-                    </span>
-                  ))}
+                  <Link
+                    to={projectLink}
+                    className="project-open"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <FiExternalLink />
+                  </Link>
 
                 </div>
 
-              </div>
+                <div className="project-body">
 
-            </article>
+                  <h3>{project.title}</h3>
 
-          ))}
+                  <p>{projDesc}</p>
+
+                  <div className="project-tech">
+
+                    {projTags.slice(0, 4).map((technology) => (
+                      <span key={technology}>
+                        {technology}
+                      </span>
+                    ))}
+
+                  </div>
+
+                </div>
+
+              </article>
+            );
+          })}
 
         </div>
 

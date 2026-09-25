@@ -6,7 +6,8 @@ import {
   FiBookOpen,
   FiSearch,
 } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { portfolioApi } from "../lib/api";
 import "./Blog.css";
 
 const defaultBlogs = [
@@ -43,21 +44,28 @@ const defaultBlogs = [
 ];
 
 export default function Blog() {
-  const [blogs, setBlogs] = useState([]);
+  const navigate = useNavigate();
+  const [blogs, setBlogs] = useState(defaultBlogs);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const saved = localStorage.getItem("ishwar_blog_posts");
-
-    if (saved) {
-      setBlogs(JSON.parse(saved));
-    } else {
-      setBlogs(defaultBlogs);
-      localStorage.setItem(
-        "ishwar_blog_posts",
-        JSON.stringify(defaultBlogs)
-      );
-    }
+    portfolioApi
+      .getBlogs()
+      .then((res) => {
+        if (res && res.blogs && res.blogs.length > 0) {
+          const publishedBlogs = res.blogs.filter((b) => b.published !== false);
+          setBlogs(publishedBlogs);
+          localStorage.setItem("ishwar_blog_posts", JSON.stringify(publishedBlogs));
+        } else {
+          const saved = localStorage.getItem("ishwar_blog_posts");
+          if (saved) setBlogs(JSON.parse(saved));
+        }
+      })
+      .catch((err) => {
+        console.warn("Using local fallback blogs:", err);
+        const saved = localStorage.getItem("ishwar_blog_posts");
+        if (saved) setBlogs(JSON.parse(saved));
+      });
   }, []);
 
   const filteredBlogs = blogs.filter((blog) => {
@@ -161,49 +169,57 @@ export default function Blog() {
           </div>
         ) : (
           <div className="blog-grid">
-            {filteredBlogs.map((blog, index) => (
-              <article
-                className="blog-card"
-                key={blog.id}
-                style={{ "--delay": `${index * 0.08}s` }}
-              >
-                <div className="blog-image">
-                  <img
-                    src={blog.image || "/assets/projects-preview.png"}
-                    alt={blog.title}
-                  />
+            {filteredBlogs.map((blog, index) => {
+              const blogSlug = blog.slug || blog._id || blog.id;
+              const blogPath = `/blog/${blogSlug}`;
+              return (
+                <article
+                  className="blog-card"
+                  key={blog._id || blog.slug || blog.id || index}
+                  style={{ "--delay": `${index * 0.08}s`, cursor: 'pointer' }}
+                  onClick={() => navigate(blogPath)}
+                >
+                  <div className="blog-image">
+                    <img
+                      src={blog.image || "/assets/projects-preview.png"}
+                      alt={blog.title}
+                      onError={(e) => {
+                        e.target.src = "/assets/projects-preview.png";
+                      }}
+                    />
 
-                  <span>{blog.category}</span>
+                    <span>{blog.category}</span>
 
-                  <div className="blog-number">
-                    0{index + 1}
-                  </div>
-                </div>
-
-                <div className="blog-card-body">
-                  <div className="blog-meta">
-                    <span>
-                      <FiCalendar />
-                      {blog.date}
-                    </span>
-
-                    <span>
-                      <FiClock />
-                      {blog.readTime}
-                    </span>
+                    <div className="blog-number">
+                      0{index + 1}
+                    </div>
                   </div>
 
-                  <h3>{blog.title}</h3>
+                  <div className="blog-card-body">
+                    <div className="blog-meta">
+                      <span>
+                        <FiCalendar />
+                        {blog.date}
+                      </span>
 
-                  <p>{blog.excerpt}</p>
+                      <span>
+                        <FiClock />
+                        {blog.readTime || '5 min read'}
+                      </span>
+                    </div>
 
-                  <Link to={`/blog/${blog.id}`}>
-                    Read Article
-                    <FiArrowRight />
-                  </Link>
-                </div>
-              </article>
-            ))}
+                    <h3>{blog.title}</h3>
+
+                    <p>{blog.excerpt}</p>
+
+                    <Link to={blogPath} onClick={(e) => e.stopPropagation()}>
+                      Read Article
+                      <FiArrowRight />
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </section>
