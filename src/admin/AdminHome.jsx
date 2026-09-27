@@ -559,18 +559,36 @@ export default function AdminHome() {
 
             <div className="two-col-inputs">
               <div className="admin-input-group">
-                <label>Resume Download URL</label>
-                <input
-                  type="text"
-                  className="admin-input"
-                  value={data.hero.resumeLink}
-                  onChange={(e) =>
-                    setData({
-                      ...data,
-                      hero: { ...data.hero, resumeLink: e.target.value },
-                    })
-                  }
-                />
+                <label>Resume Download (PDF Upload)</label>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    className="admin-input"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      if (file.size > 10 * 1024 * 1024) {
+                        alert("File too large. Max 10MB allowed.");
+                        return;
+                      }
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        setData({
+                          ...data,
+                          hero: { ...data.hero, resumeLink: event.target.result },
+                        });
+                        setToast("Resume PDF loaded! Click Save to update.");
+                        setTimeout(() => setToast(""), 3000);
+                      };
+                      reader.readAsDataURL(file);
+                    }}
+                    style={{ padding: '8px' }}
+                  />
+                  {data.hero.resumeLink && data.hero.resumeLink.length > 100 && (
+                    <span style={{ fontSize: '12px', color: 'var(--green)' }}>✓ Uploaded</span>
+                  )}
+                </div>
               </div>
 
               <div className="admin-input-group">

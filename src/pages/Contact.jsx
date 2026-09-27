@@ -63,24 +63,26 @@ export default function Contact() {
       .catch(() => {});
   }, []);
 
-  const faqs = [
-    [
-      "Are you available for freelance work?",
-      "Yes, I am open to freelance projects. Feel free to reach out with your requirements, project scope and timeline.",
-    ],
-    [
-      "What technologies do you work with?",
-      "I work with modern web technologies including React, JavaScript, Node.js, Java, Spring Boot, REST APIs, MySQL and other full-stack technologies.",
-    ],
-    [
-      "How quickly can you start a project?",
-      "It depends on the project scope and current availability. After understanding your requirements, we can discuss a suitable timeline.",
-    ],
-    [
-      "Can you build a complete website from scratch?",
-      "Yes. I can work on the complete development process including responsive UI, frontend development, backend APIs, database integration and deployment.",
-    ],
+  const defaultFaqs = [
+    {
+      question: "Are you available for freelance work?",
+      answer: "Yes, I am open to freelance projects. Feel free to reach out with your requirements, project scope and timeline.",
+    },
+    {
+      question: "What technologies do you work with?",
+      answer: "I work with modern web technologies including React, JavaScript, Node.js, Java, Spring Boot, REST APIs, MySQL and other full-stack technologies.",
+    },
+    {
+      question: "How quickly can you start a project?",
+      answer: "It depends on the project scope and current availability. After understanding your requirements, we can discuss a suitable timeline.",
+    },
+    {
+      question: "Can you build a complete website from scratch?",
+      answer: "Yes. I can work on the complete development process including responsive UI, frontend development, backend APIs, database integration and deployment.",
+    },
   ];
+
+  const faqs = contactInfo.faqs && contactInfo.faqs.length > 0 ? contactInfo.faqs : defaultFaqs;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -501,7 +503,7 @@ export default function Contact() {
 
         <div className="faq-list">
 
-          {faqs.map(([question, answer], index) => (
+          {faqs.map(({question, answer}, index) => (
 
             <div
               className={

@@ -98,6 +98,7 @@ export default function AdminAbout() {
   // New milestone draft state
   const [newMilestone, setNewMilestone] = useState({
     title: '',
+    company: '',
     period: '',
     description: '',
   });
@@ -199,7 +200,7 @@ export default function AdminAbout() {
       },
     }));
 
-    setNewMilestone({ title: '', period: '', description: '' });
+    setNewMilestone({ title: '', company: '', period: '', description: '' });
     setShowAddMilestone(false);
     setToast('Milestone added! Remember to save changes.');
     setTimeout(() => setToast(''), 3000);
@@ -1114,17 +1115,30 @@ export default function AdminAbout() {
                   </div>
 
                   <div className="admin-input-group">
-                    <label>Period / Year / Institution</label>
+                    <label>Company / Organization Name</label>
                     <input
                       type="text"
                       className="admin-input"
-                      placeholder="e.g. Sep 2023 – Feb 2024 or Wipro"
-                      value={newMilestone.period}
+                      placeholder="e.g. Wipro or MDU Rohtak"
+                      value={newMilestone.company}
                       onChange={(e) =>
-                        setNewMilestone({ ...newMilestone, period: e.target.value })
+                        setNewMilestone({ ...newMilestone, company: e.target.value })
                       }
                     />
                   </div>
+                </div>
+
+                <div className="admin-input-group" style={{ marginTop: '12px' }}>
+                  <label>Period / Year</label>
+                  <input
+                    type="text"
+                    className="admin-input"
+                    placeholder="e.g. Sep 2023 – Feb 2024"
+                    value={newMilestone.period}
+                    onChange={(e) =>
+                      setNewMilestone({ ...newMilestone, period: e.target.value })
+                    }
+                  />
                 </div>
 
                 <div className="admin-input-group">
@@ -1192,16 +1206,28 @@ export default function AdminAbout() {
                     </div>
 
                     <div className="admin-input-group">
-                      <label>Period / Institution</label>
+                      <label>Company / Organization Name</label>
                       <input
                         type="text"
                         className="admin-input"
-                        value={milestone.period || ''}
+                        value={milestone.company || ''}
                         onChange={(e) =>
-                          handleUpdateMilestone(idx, 'period', e.target.value)
+                          handleUpdateMilestone(idx, 'company', e.target.value)
                         }
                       />
                     </div>
+                  </div>
+
+                  <div className="admin-input-group" style={{ marginTop: '12px' }}>
+                    <label>Period / Year</label>
+                    <input
+                      type="text"
+                      className="admin-input"
+                      value={milestone.period || ''}
+                      onChange={(e) =>
+                        handleUpdateMilestone(idx, 'period', e.target.value)
+                      }
+                    />
                   </div>
 
                   <div className="admin-input-group">
@@ -1264,6 +1290,7 @@ export default function AdminAbout() {
                     <span className="journey-node-dot"></span>
                     <div className="journey-node-content">
                       <strong>{item.title}</strong>
+                      {item.company && <div style={{ fontSize: '11px', color: '#1597ff', marginBottom: '4px' }}>{item.company}</div>}
                       <small>{item.period}</small>
                       <p>{item.description}</p>
                     </div>

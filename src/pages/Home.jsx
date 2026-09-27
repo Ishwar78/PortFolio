@@ -228,6 +228,7 @@ export default function Home() {
               <a
                 className="resume-link"
                 href={hero.resumeLink}
+                download="Resume.pdf"
                 target="_blank"
                 rel="noreferrer"
               >

@@ -259,8 +259,63 @@ export default function AdminContact() {
               />
             </div>
           </div>
+          
+          <div className="panel-title" style={{ marginTop: '16px' }}>
+            <FiCheckCircle className="panel-title-icon" />
+            <h2>Frequently Asked Questions (FAQs)</h2>
+          </div>
+          
+          <div className="faqs-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {(data.faqs || []).map((faq, index) => (
+              <div key={index} className="admin-input-group" style={{ background: 'rgba(255,255,255,0.03)', padding: '10px', borderRadius: '8px' }}>
+                <input
+                  type="text"
+                  className="admin-input"
+                  placeholder="Question"
+                  value={faq.question}
+                  onChange={(e) => {
+                    const newFaqs = [...(data.faqs || [])];
+                    newFaqs[index].question = e.target.value;
+                    setData({ ...data, faqs: newFaqs });
+                  }}
+                  style={{ marginBottom: '8px' }}
+                />
+                <textarea
+                  className="admin-input"
+                  placeholder="Answer"
+                  rows="2"
+                  value={faq.answer}
+                  onChange={(e) => {
+                    const newFaqs = [...(data.faqs || [])];
+                    newFaqs[index].answer = e.target.value;
+                    setData({ ...data, faqs: newFaqs });
+                  }}
+                ></textarea>
+                <button
+                  type="button"
+                  style={{ marginTop: '8px', background: 'rgba(239, 68, 68, 0.15)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer' }}
+                  onClick={() => {
+                    const newFaqs = (data.faqs || []).filter((_, i) => i !== index);
+                    setData({ ...data, faqs: newFaqs });
+                  }}
+                >
+                  Remove FAQ
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="admin-btn admin-btn-secondary"
+              style={{ alignSelf: 'flex-start' }}
+              onClick={() => {
+                setData({ ...data, faqs: [...(data.faqs || []), { question: '', answer: '' }] });
+              }}
+            >
+              + Add FAQ
+            </button>
+          </div>
 
-          <div className="form-action-row">
+          <div className="form-action-row" style={{ marginTop: '20px' }}>
             <button
               type="button"
               className="admin-btn admin-btn-primary"

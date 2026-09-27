@@ -233,49 +233,59 @@ const projectsData = {
 
 export default function ProjectDetail() {
   const { id } = useParams();
-  const [project, setProject] = useState(() => {
-    return projectsData[id] || projectsData['thekissancity'];
-  });
+  const [project, setProject] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Check local rich dataset first
-    if (projectsData[id]) {
-      setProject(projectsData[id]);
+    // Check if we have local rich dataset for this specific slug
+    const localData = projectsData[id];
+    if (localData) {
+      setProject(localData);
+      setLoading(false);
     }
 
-    // 2. Fetch from database to get any admin live edits
     portfolioApi
       .getProjectById(id)
       .then((res) => {
         if (res && res.project) {
           const apiProj = res.project;
-          const fallback = projectsData[id] || projectsData[apiProj.slug] || projectsData['thekissancity'];
+          const fallback = projectsData[apiProj.slug] || {}; // Only fallback if slug actually matches
 
           setProject({
-            title: apiProj.title || fallback.title,
-            desc: apiProj.desc || fallback.desc,
-            overview: apiProj.overview || fallback.overview,
-            img: apiProj.img || fallback.img,
-            gallery: apiProj.gallery && apiProj.gallery.length >= 2 ? apiProj.gallery : fallback.gallery,
-            duration: apiProj.duration || fallback.duration,
-            category: apiProj.category || fallback.category,
-            role: apiProj.role || fallback.role,
-            status: apiProj.status || fallback.status,
-            liveUrl: apiProj.liveUrl || fallback.liveUrl,
-            githubUrl: apiProj.githubUrl || fallback.githubUrl,
-            tags: apiProj.tags && apiProj.tags.length > 0 ? apiProj.tags : fallback.tags,
-            features: apiProj.features && apiProj.features.length > 0 ? apiProj.features : fallback.features,
-            challenges: apiProj.challenges && apiProj.challenges.length > 0 ? apiProj.challenges : fallback.challenges,
-            solutions: apiProj.solutions && apiProj.solutions.length > 0 ? apiProj.solutions : fallback.solutions,
-            techStack: apiProj.techStack || fallback.techStack,
-            learned: apiProj.learned || fallback.learned,
+            title: apiProj.title || fallback.title || '',
+            desc: apiProj.desc || fallback.desc || '',
+            overview: apiProj.overview || fallback.overview || '',
+            img: apiProj.img || fallback.img || '/assets/projects-preview.png',
+            gallery: apiProj.gallery && apiProj.gallery.length > 0 ? apiProj.gallery : (fallback.gallery || []),
+            duration: apiProj.duration || fallback.duration || '',
+            category: apiProj.category || fallback.category || '',
+            role: apiProj.role || fallback.role || '',
+            status: apiProj.status || fallback.status || '',
+            liveUrl: apiProj.liveUrl || fallback.liveUrl || '',
+            githubUrl: apiProj.githubUrl || fallback.githubUrl || '',
+            tags: apiProj.tags && apiProj.tags.length > 0 ? apiProj.tags : (fallback.tags || []),
+            features: apiProj.features && apiProj.features.length > 0 ? apiProj.features : (fallback.features || []),
+            challenges: apiProj.challenges && apiProj.challenges.length > 0 ? apiProj.challenges : (fallback.challenges || []),
+            solutions: apiProj.solutions && apiProj.solutions.length > 0 ? apiProj.solutions : (fallback.solutions || []),
+            techStack: apiProj.techStack || fallback.techStack || '',
+            learned: apiProj.learned || fallback.learned || '',
           });
+          setLoading(false);
         }
       })
       .catch((err) => {
         console.warn('Using local fallback for project detail:', err);
+        setLoading(false);
       });
   }, [id]);
+
+  if (loading && !project) {
+    return <main className="detail-page" style={{ padding: '100px 20px', textAlign: 'center' }}>Loading project details...</main>;
+  }
+
+  if (!project) {
+    return <main className="detail-page" style={{ padding: '100px 20px', textAlign: 'center' }}>Project not found.</main>;
+  }
 
   const titleWords = (project.title || 'Featured Project').split(' ');
   const titleFirst = titleWords[0];

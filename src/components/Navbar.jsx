@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   FiGithub,
@@ -10,11 +10,49 @@ import {
   FiMenu,
   FiX,
 } from "react-icons/fi";
+import { portfolioApi } from "../lib/api";
 import "./Navbar.css";
 
 export default function Navbar({ dark, setDark }) {
   const [open, setOpen] = useState(false);
   const nav = useNavigate();
+  const [links, setLinks] = useState({
+    github: "https://github.com/",
+    linkedin: "https://linkedin.com/",
+    twitter: "https://twitter.com/",
+    resume: "/resume.pdf",
+  });
+
+  useEffect(() => {
+    const fetchLinks = async () => {
+      try {
+        const contactRes = await portfolioApi.getContact();
+        const homeRes = await portfolioApi.getHomeContent();
+        
+        setLinks({
+          github: contactRes?.data?.github || "https://github.com/",
+          linkedin: contactRes?.data?.linkedin || "https://linkedin.com/",
+          twitter: contactRes?.data?.twitter || "https://twitter.com/",
+          resume: homeRes?.data?.hero?.resumeLink || "/resume.pdf",
+        });
+      } catch (err) {
+        // use local storage fallback
+        const cachedContact = localStorage.getItem('ishwar_contact_info');
+        const cachedHome = localStorage.getItem('ishwar_home_content');
+        if (cachedContact || cachedHome) {
+          const c = cachedContact ? JSON.parse(cachedContact) : {};
+          const h = cachedHome ? JSON.parse(cachedHome) : {};
+          setLinks({
+            github: c.github || "https://github.com/",
+            linkedin: c.linkedin || "https://linkedin.com/",
+            twitter: c.twitter || "https://twitter.com/",
+            resume: h.hero?.resumeLink || "/resume.pdf",
+          });
+        }
+      }
+    };
+    fetchLinks();
+  }, []);
 
   const handleNavigation = () => {
     setOpen(false);
@@ -22,6 +60,19 @@ export default function Navbar({ dark, setDark }) {
       top: 0,
       behavior: "smooth",
     });
+  };
+
+  const handleResumeClick = () => {
+    setOpen(false);
+    if (links.resume) {
+      const a = document.createElement("a");
+      a.href = links.resume;
+      a.download = "Resume.pdf";
+      a.target = "_blank";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   };
 
   return (
@@ -73,34 +124,40 @@ export default function Navbar({ dark, setDark }) {
         <div className="nav-actions">
 
           {/* GitHub */}
-          <a
-            href="https://github.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-          >
-            <FiGithub />
-          </a>
+          {links.github && (
+            <a
+              href={links.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
+              <FiGithub />
+            </a>
+          )}
 
           {/* LinkedIn */}
-          <a
-            href="https://linkedin.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-          >
-            <FiLinkedin />
-          </a>
+          {links.linkedin && (
+            <a
+              href={links.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
+              <FiLinkedin />
+            </a>
+          )}
 
           {/* Twitter */}
-          <a
-            href="https://twitter.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Twitter"
-          >
-            <FiTwitter />
-          </a>
+          {links.twitter && (
+            <a
+              href={links.twitter}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Twitter"
+            >
+              <FiTwitter />
+            </a>
+          )}
 
           {/* Theme Toggle */}
           <button
@@ -115,14 +172,7 @@ export default function Navbar({ dark, setDark }) {
           {/* Resume */}
           <button
             className="resume-btn"
-            onClick={() => {
-              setOpen(false);
-              nav("/contact");
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              });
-            }}
+            onClick={handleResumeClick}
             type="button"
           >
             <FiDownload />

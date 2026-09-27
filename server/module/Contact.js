@@ -19,6 +19,13 @@ const contactSchema = new mongoose.Schema(
     twitter: { type: String, default: 'https://twitter.com/' },
     instagram: { type: String, default: 'https://instagram.com/' },
     youtube: { type: String, default: 'https://youtube.com/' },
+    faqs: {
+      type: [{
+        question: String,
+        answer: String
+      }],
+      default: []
+    }
   },
   { timestamps: true }
 );

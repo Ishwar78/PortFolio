@@ -119,6 +119,7 @@ export default function About() {
           <div className="about-actions">
             <a
               href={hero.resumeLink || '/resume.pdf'}
+              download="Resume.pdf"
               target="_blank"
               rel="noreferrer"
             >
@@ -249,10 +250,11 @@ export default function About() {
         <h2>{journey.heading || 'Education & Experience'}</h2>
         <div className="journey-line">
           {milestones && milestones.length > 0 ? (
-            milestones.map((item, idx) => (
+            [...milestones].reverse().map((item, idx) => (
               <article key={item._id || idx}>
                 <i />
                 <b>{item.title}</b>
+                {item.company && <div style={{ fontSize: '13px', color: 'var(--text)', marginTop: '4px', fontWeight: '500' }}>{item.company}</div>}
                 <span>{item.period}</span>
                 <p>{item.description}</p>
               </article>
