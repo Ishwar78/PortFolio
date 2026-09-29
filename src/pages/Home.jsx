@@ -144,8 +144,20 @@ export default function Home() {
       .getProjects()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
+          const mapped = data.map((p) => ({
+            id: p.slug || p._id || p.id,
+            title: p.title,
+            desc: p.desc,
+            img: p.img || '/assets/projects-preview.png',
+            tags: Array.isArray(p.tags) ? p.tags : [],
+            cat: p.category || 'Full Stack',
+            liveUrl: p.liveUrl || '',
+            githubUrl: p.githubUrl || 'https://github.com/Ishwar78',
+            isPinned: Boolean(p.isPinned),
+          }));
+          
           // Sort pinned projects first
-          const sorted = [...data].sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
+          const sorted = [...mapped].sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
           const pinnedList = sorted.filter((p) => p.isPinned);
           // Show up to 6 pinned projects or 3 default
           const countToShow = Math.min(6, Math.max(3, pinnedList.length));

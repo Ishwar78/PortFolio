@@ -231,18 +231,18 @@ export default function Projects() {
 
 
       const matchesSearch =
-        p.title.toLowerCase().includes(searchText) ||
-        p.desc.toLowerCase().includes(searchText) ||
-        p.tags.some((tag) =>
-          tag.toLowerCase().includes(searchText)
-        );
+        !searchText ||
+        (p.title && String(p.title).toLowerCase().includes(searchText)) ||
+        (p.desc && String(p.desc).toLowerCase().includes(searchText)) ||
+        (p.cat && String(p.cat).toLowerCase().includes(searchText)) ||
+        (p.tags && p.tags.some((tag) => tag && String(tag).toLowerCase().includes(searchText)));
 
 
       return matchesFilter && matchesSearch;
 
     });
 
-  }, [filter, search]);
+  }, [projectList, filter, search]);
 
 
   return (
