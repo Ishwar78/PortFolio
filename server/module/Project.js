@@ -26,7 +26,7 @@ const projectSchema = new mongoose.Schema(
     },
     img: {
       type: String,
-      default: '/assets/projects-preview.png',
+      default: '/assets/ishwar-profile.jpg',
     },
     liveUrl: {
       type: String,
