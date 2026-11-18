@@ -98,7 +98,7 @@ const defaultProjects = [
       'Implemented custom debounce hooks and in-memory query cache.',
       'Used BroadcastChannel API alongside localStorage listeners for instantaneous multi-tab sync.',
     ],
-    gallery: ['/assets/uni.pn', '/assets/uni1.png'],
+    gallery: ['/assets/uni.png', '/assets/uni1.png'],
   },
   {
     slug: 'skillserve-academy',

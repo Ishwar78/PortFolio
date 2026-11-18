@@ -92,30 +92,88 @@ const IconMap = {
   FiDownload, FiDatabase, FiServer, FiMonitor
 };
 
+// =========================================================
+// STATIC FEATURED PROJECTS
+// Har project ke liye alag alag image yahan set kar sakte hain:
+// =========================================================
 const projects = [
   {
-    title: "E-Commerce Shopping Cart",
-    description:
-      "A complete full-stack shopping platform with product management, cart functionality, authentication, payment integration and admin features.",
-    image: "/assets/projects-preview.png",
-    tech: ["React", "Spring Boot", "MySQL"],
+    id: "teamtrack",
+    slug: "teamtrack",
+    title: "TeamTrack — Activity Monitoring Platform",
+    desc: "A full-stack employee activity monitoring platform designed to help teams track work activity through screenshots and productivity data.",
+    description: "A full-stack employee activity monitoring platform designed to help teams track work activity through screenshots and productivity data.",
+    img: "/assets/teamtreck.png",
+    image: "/assets/teamtreck.png",
+    tech: ["React", "Spring Boot", "MySQL", "Activity Monitoring"],
+    tags: ["React", "Spring Boot", "MySQL", "Activity Monitoring"],
     number: "01",
+    isPinned: true,
   },
   {
-    title: "Hotel Booking Management",
-    description:
-      "A modern hotel booking system with room management, customer booking flow, authentication and dedicated admin functionality.",
-    image: "/assets/project-detail-preview.png",
-    tech: ["React", "Node.js", "MongoDB"],
+    id: "thekissancity",
+    slug: "thekissancity",
+    title: "TheKissanCity — E-Commerce Shopping Platform",
+    desc: "A complete full-stack e-commerce platform with product browsing, categories, shopping cart, customer checkout and payment integration.",
+    description: "A complete full-stack e-commerce platform with product browsing, categories, shopping cart, customer checkout and payment integration.",
+    img: "/assets/thekissan.png",
+    image: "/assets/thekissan.png",
+    tech: ["React", "Node.js", "MongoDB", "E-Commerce"],
+    tags: ["React", "Node.js", "MongoDB", "E-Commerce"],
     number: "02",
+    isPinned: true,
   },
   {
-    title: "Expense Tracker",
-    description:
-      "A clean expense management application designed to track spending, visualize reports and manage personal financial activity.",
-    image: "/assets/skills-preview.png",
-    tech: ["React", "Node.js", "MongoDB"],
+    id: "uni10",
+    slug: "uni10",
+    title: "Uni10 — Modern E-Commerce Platform",
+    desc: "A scalable e-commerce web application built for online product discovery, cart functionality, order processing and streamlined checkout.",
+    description: "A scalable e-commerce web application built for online product discovery, cart functionality, order processing and streamlined checkout.",
+    img: "/assets/uni.png",
+    image: "/assets/uni.png",
+    tech: ["React", "Node.js", "MongoDB", "REST APIs"],
+    tags: ["React", "Node.js", "MongoDB", "REST APIs"],
     number: "03",
+    isPinned: true,
+  },
+  {
+    id: "skillserve-academy",
+    slug: "skillserve-academy",
+    title: "SkillServe Academy — Education Platform",
+    desc: "A modern educational website designed to present courses, learning programs and academy information through a clean and responsive interface.",
+    description: "A modern educational website designed to present courses, learning programs and academy information through a clean and responsive interface.",
+    img: "/assets/skillserve.png",
+    image: "/assets/skillserve.png",
+    tech: ["React", "Redux", "Tailwind CSS", "UI/UX"],
+    tags: ["React", "Redux", "Tailwind CSS", "UI/UX"],
+    number: "04",
+    isPinned: false,
+  },
+  {
+    id: "sk-classes",
+    slug: "sk-classes",
+    title: "SK Classes — Study Abroad Platform",
+    desc: "An education-focused web platform designed to provide information and guidance for students planning their study-abroad journey.",
+    description: "An education-focused web platform designed to provide information and guidance for students planning their study-abroad journey.",
+    img: "/assets/skclass.png",
+    image: "/assets/skclass.png",
+    tech: ["React", "Node.js", "MongoDB", "Education"],
+    tags: ["React", "Node.js", "MongoDB", "Education"],
+    number: "05",
+    isPinned: false,
+  },
+  {
+    id: "portfolio-website",
+    slug: "portfolio-website",
+    title: "Ishwar Sharma — Developer Portfolio",
+    desc: "A modern professional portfolio showcasing development experience, technical skills, interactive showcase and dynamic project management.",
+    description: "A modern professional portfolio showcasing development experience, technical skills, interactive showcase and dynamic project management.",
+    img: "/assets/projects-preview.png",
+    image: "/assets/projects-preview.png",
+    tech: ["React", "Vite", "Node.js", "REST API"],
+    tags: ["React", "Vite", "Node.js", "REST API"],
+    number: "06",
+    isPinned: false,
   },
 ];
 
@@ -672,7 +730,8 @@ export default function Home() {
                     src={projImg}
                     alt={project.title}
                     onError={(e) => {
-                      e.target.src = '/assets/projects-preview.png';
+                      e.target.onerror = null;
+                      e.target.src = '/assets/teamtreck.png';
                     }}
                   />
 

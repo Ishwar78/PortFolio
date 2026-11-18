@@ -34,7 +34,7 @@ export default function Projects() {
       desc:
         'A full-stack employee activity monitoring platform designed to help teams track work activity through screenshots and activity data. The platform provides a centralized interface for monitoring team members, reviewing activity records and managing workforce productivity.',
 
-      img: '/assets/projects-preview.png',
+      img: '/assets/teamtreck.png',
 
       tags: [
         'React',
@@ -167,7 +167,7 @@ export default function Projects() {
       desc:
         'A modern professional portfolio showcasing my development experience, technical skills, projects and professional journey. Built with React and Vite with a responsive UI, interactive sections and a Node.js-powered backend for dynamic portfolio content management.',
 
-      img: '/assets/portfolio.png',
+      img: '/assets/projects-preview.png',
 
       tags: [
         'React',
