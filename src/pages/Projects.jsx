@@ -60,7 +60,7 @@ export default function Projects() {
       desc:
         'A complete full-stack e-commerce platform featuring product browsing, categories, shopping cart, customer checkout and payment integration. The system also includes administrative functionality for managing products, inventory and online orders.',
 
-      img: '/assets/project-detail-preview.png',
+      img: '/assets/thekissan.png',
 
       tags: [
         'React',
@@ -87,7 +87,7 @@ export default function Projects() {
       desc:
         'A scalable e-commerce web application built for online product discovery and shopping. The platform includes product and collection management, cart functionality, checkout flow, order processing and third-party service integrations for a complete online shopping experience.',
 
-      img: '/assets/skills-preview.png',
+      img: '/assets/uni.png',
 
       tags: [
         'React',
@@ -114,7 +114,7 @@ export default function Projects() {
       desc:
         'A modern educational website designed to present courses, learning programs and academy information through a clean and responsive interface. Built with React and Redux to provide structured content, smooth navigation and an engaging user experience across devices.',
 
-      img: '/assets/home-preview.png',
+      img: '/assets/skillserve.png',
 
       tags: [
         'React',
@@ -140,7 +140,7 @@ export default function Projects() {
       desc:
         'An education-focused web platform designed to provide information and guidance for students planning their study-abroad journey. The website presents programs, services and educational information through a responsive and user-friendly interface.',
 
-      img: '/assets/experience-preview.png',
+      img: '/assets/skclass.png',
 
       tags: [
         'React',
@@ -167,7 +167,7 @@ export default function Projects() {
       desc:
         'A modern professional portfolio showcasing my development experience, technical skills, projects and professional journey. Built with React and Vite with a responsive UI, interactive sections and a Node.js-powered backend for dynamic portfolio content management.',
 
-      img: '/assets/home-preview.png',
+      img: '/assets/portfolio.png',
 
       tags: [
         'React',
@@ -181,6 +181,12 @@ export default function Projects() {
       liveUrl: 'https://ishwarweb.in/',
       githubUrl: 'https://github.com/Ishwar78/PortFolio',
     },
+
+
+
+
+
+    
   ];
 
   const [projectList, setProjectList] = useState(projects);
